@@ -1,0 +1,19 @@
+/* App.css */
+.App {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 100px); /* 헤더와 푸터의 높이를 고려 */
+}
+
+footer {
+  background-color: #f8f8f8;
+  padding: 1rem;
+  text-align: center;
+}  
