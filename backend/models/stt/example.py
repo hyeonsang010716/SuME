@@ -62,7 +62,7 @@ def delete_blob(bucket_name, file_name):
 def process_all(file_name):
     # 버킷 이름, 음성파일 경로 설정
     bucket_name = "sume_audio_bucket"
-    source_file_path = "./models/stt/example_audio_file/Trip (Feat. Hannah).wav"
+    source_file_path = f"./models/stt/example_audio_file/{file_name}"
     
     # 버킷에 음성파일 업로드
     upload_blob(bucket_name, source_file_path, file_name)
