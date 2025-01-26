@@ -6,9 +6,6 @@ from dotenv import load_dotenv
 # .env 파일 로드
 load_dotenv()
 
-# 구글 서비스 계정 키 환경변수 지정정
-GOOGLE_APPLICATION_CREDENTIALS = os.getenv('GOOGLE_APPLICATION_CREDENTIALS') 
-
 def upload_blob(bucket_name, source_file_path, file_name):
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
@@ -62,7 +59,7 @@ def delete_blob(bucket_name, file_name):
 def process_all(file_name):
     # 버킷 이름, 음성파일 경로 설정
     bucket_name = "sume_audio_bucket"
-    source_file_path = "./models/stt/example_audio_file/Trip (Feat. Hannah).wav"
+    source_file_path = "./example/stt/example_audio_file/Trip (Feat. Hannah).wav"
     
     # 버킷에 음성파일 업로드
     upload_blob(bucket_name, source_file_path, file_name)
