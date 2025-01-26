@@ -1,6 +1,7 @@
-const API_URL = "http://localhost:3001"; // 백엔드 URL
+const API_URL = "http://localhost:5000";
 
 const API = {
+  //Audio POST
   uploadAudio: async (formData) => {
     try {
       const response = await fetch(`${API_URL}/audio`, {
@@ -12,13 +13,14 @@ const API = {
         throw new Error("File upload failed");
       }
 
-      return await response.json(); // 서버 응답 데이터 반환
+      return await response.json();
     } catch (error) {
       console.error("Error uploading file:", error);
-      throw error; // 에러를 호출한 쪽으로 전달
+      throw error;
     }
   },
-  // 텍스트 POST 요청 (챗봇 활용)
+  // 텍스트 POST 요청
+  /*
   postText: async (text) => {
     try {
       const response = await fetch(`${API_URL}/text`, {
@@ -38,16 +40,17 @@ const API = {
       console.error("Error submitting text:", error);
       throw error;
     }
-  },
+  },*/
 
+  //요약본 GET
   getSummation: async () => {
     try {
-      const response = await fetch(`${API_URL}/hi`);
+      const response = await fetch(`${API_URL}/audio`);
       if (!response.ok) {
         throw new Error("Failed to fetch Summation");
       }
 
-      return await response.text(); // 문자열 응답 처리
+      return await response.text();
     } catch (error) {
       console.error("Error fetching Summation:", error);
       throw error;
