@@ -23,7 +23,7 @@ const Title = ( {isClick} ) => {
     }
 
     return () => clearTimeout(timeout);
-  }, [isHovered]);
+  }, [isHovered, isClick]);
 
   const animateText = (start, end, callback) => {
     const steps = [];

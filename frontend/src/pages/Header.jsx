@@ -5,14 +5,14 @@ import { faCaretLeft, faCaretRight } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 
 const Header = () => {
-  const [notes, setNotes] = useState([]);
+  // const [notes, setNotes] = useState([]);
   const [isClick, setIsClick] = useState(false);
-
+/*
   const addNote = () => {
     const newNote = { id: Date.now(), content: `Note ${notes.length + 1}` };
     setNotes([...notes, newNote]);
   };
-
+*/
   const Sidebar = () => {
     setIsClick(!isClick);
     if (isClick){
@@ -29,7 +29,7 @@ const Header = () => {
       <div>
         <Link
           to="/login"
-          className="absolute right-8 top-4 text-base font-semibold text-white lg:text-black hover:text-gray-500 rounded transition duration-300"
+          className="absolute right-8 top-4 text-base font-semibold text-white hover:text-gray-400 rounded transition duration-300 lg:text-black"
         >
           Login
         </Link>

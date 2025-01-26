@@ -19,7 +19,7 @@ const API = {
       throw error;
     }
   },
-  // 텍스트 POST 요청
+  // 텍스트 POST 요청 (챗봇 기능 구현한다면 사용 예정)
   /*
   postText: async (text) => {
     try {

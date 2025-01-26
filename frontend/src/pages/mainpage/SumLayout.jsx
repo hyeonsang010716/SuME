@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCopy, faCheck } from "@fortawesome/free-solid-svg-icons";
 
-const SumPage = ({ isStart, summation, isLoading, errorMessage }) => {
+const SumLayout = ({ isStart, summation, isLoading, errorMessage }) => {
   const [isCopied, setIsCopied] = useState(false);
 
   const handleCopy = () => {
@@ -60,4 +60,4 @@ const SumPage = ({ isStart, summation, isLoading, errorMessage }) => {
   );
 };
 
-export default SumPage;
+export default SumLayout;

@@ -2,8 +2,7 @@ import React, { useState, useEffect } from "react";
 import TimerDisplay from "./TimerDisplay";
 import RecordingButton from "./RecordingButton";
 import RecordedAudio from "./RecordedAudio";
-import MainLayout from "./MainLayout";
-import SumPage from "./SumPage";
+import SumLayout from "./SumLayout";
 import API from "../../API";
 import "../../App.css"
 
@@ -87,7 +86,7 @@ const Mainpage = () => {
     >
       <div className="w-full flex flex-col items-center justify-end h-full rounded-none pt-12 shadow-2xl bg-gray-100 border-10 lg:w-5/6 lg:h-5/6 lg:pt-0 lg:rounded-t-2xl 2xl:w-3/4">
         
-        <SumPage isStart={isStart} summation={summation} isLoading={isLoading} errorMessage={errorMessage} />
+        <SumLayout isStart={isStart} summation={summation} isLoading={isLoading} errorMessage={errorMessage} />
         <RecordedAudio audioURL={audioURL} />
         <div
           id="text창"
