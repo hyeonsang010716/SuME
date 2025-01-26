@@ -59,7 +59,7 @@ def delete_blob(bucket_name, file_name):
     blob.delete()
     print(f"File {file_name}가 삭제됨.")
 
-def process_all(file_name):
+def process_STT(file_name):
     # 버킷 이름, 음성파일 경로 설정
     bucket_name = "sume_audio_bucket"
     source_file_path = f"./models/stt/example_audio_file/{file_name}"
@@ -81,5 +81,5 @@ if __name__=="__main__":
     # GCS에 업로드할 파일 이름 설정
     file_name = "Trip (Feat. Hannah).wav"
 
-    result_text = process_all(file_name)
+    result_text = process_STT(file_name)
     print(result_text)
