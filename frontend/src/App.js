@@ -8,17 +8,14 @@ import Login from "./pages/login/login";
 function App() {
   return (
     <Router>
-      <div
-        className="App relative h-screen lg:flex lg:flex-row flex-col"
-      >
-        <div className="lg:h-full">
+      <div className="flex items-center justify-center p-10">
+        <div id="div1">
           <Header />
         </div>
-        <div className="w-full">
+        <div id="div2" className="w-full">
           <Routes>
             <Route path="/" element={<Mainpage />} />
             <Route path="/main" element={<Mainpage />} />
-            <Route path="/note/:id" element={<Mainpage />} />
             <Route path="/login" element={<Login />} />
           </Routes>
         </div>

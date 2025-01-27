@@ -31,6 +31,6 @@ npm start
             |- RecordedAudio.jsx         # Audio 재생 Component
             |- RecordingButton.jsx       # Recording Button Component
             |- SumLayout.jsx             # 요약 창 Component
-            |- TextInputForm.jsx         # text post Component (미사용용)
+            |- TextInputForm.jsx         # text post Component (미사용)
             |- TimerDisplay.jsx          # 타이머 Component
 ```
