@@ -3,6 +3,7 @@ from db import db
 class Audio(db.Model):
     __tablename__ = "audiofile"
     id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(200), nullable=False)
     file_path = db.Column(db.String(200), nullable=False)
 
     @classmethod
@@ -13,20 +14,20 @@ class Audio(db.Model):
         return new_audio
 
     @classmethod
-    def get(cls, audio_id):
-        return cls.query.get(audio_id)
+    def get(cls, audio_name):
+        return cls.query.get(audio_name)
 
     @classmethod
-    def update(cls, audio_id, file_path):
-        audio = cls.query.get(audio_id)
+    def update(cls, audio_name, file_path):
+        audio = cls.query.get(audio_name)
         if audio:
             audio.file_path = file_path
             db.session.commit()
         return audio
 
     @classmethod
-    def delete(cls, audio_id):
-        audio = cls.query.get(audio_id)
+    def delete(cls, audio_name):
+        audio = cls.query.get(audio_name)
         if audio:
             db.session.delete(audio)
             db.session.commit()

@@ -1,5 +1,5 @@
-from flask import Blueprint, current_app
-import requests, os
+from flask import Blueprint, request, jsonify
+import os
 
 from db_models.audio import Audio
 
@@ -16,10 +16,20 @@ def hello():
     return f"Hello World!"
 
 @bp.route("/audio", methods=['POST'])
-def get_audio():
-    file_path = requests.json.get("file_path")
-    audio = Audio.create(file_path)
-    return {"id": audio.id, "file_path": audio.file_path}, 201
+def upload_audio():
+    if 'file' not in request.files:
+        return jsonify({"message": "No file part"}), 400
+    file = request.files['file']
+    
+    if file.filename == '':
+        return jsonify({"message": "No selected file"}), 400
+    
+    filename = "test"
+    file_path = os.path.join(UPLOAD_PATH, filename)
+    
+    file.save(file_path)
+    
+    return jsonify({"message": "File uploaded successfully", "file_path": file_path}), 201
 
 @bp.route("/audio/<int:audio_id>", methods=['GET'])
 def send_audio(audio_id):
