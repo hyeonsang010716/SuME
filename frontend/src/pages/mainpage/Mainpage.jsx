@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 import TimerDisplay from "./TimerDisplay";
 import RecordingButton from "./RecordingButton";
 import RecordedAudio from "./RecordedAudio";
+import Title from "../Title";
 import SumLayout from "./SumLayout";
+import Descript from "./Descript";
 import API from "../../API";
 import "../../App.css"
 
@@ -80,25 +82,26 @@ const Mainpage = () => {
   }, [isRecording, recordingStartTime]);
 
   return (
-    <div
-      className="flex flex-col items-center justify-end h-screen"
-      style={{ background: "#E4E4E7" }}
-    >
-      <div className="w-full flex flex-col items-center justify-end h-full rounded-none pt-12 shadow-2xl bg-gray-100 border-10 lg:w-5/6 lg:h-5/6 lg:pt-0 lg:rounded-t-2xl 2xl:w-3/4">
-        
-        <SumLayout isStart={isStart} summation={summation} isLoading={isLoading} errorMessage={errorMessage} />
-        <RecordedAudio audioURL={audioURL} />
+    <div id="div2" className="flex flex-col items-center w-2/3 h-3/4 bg-white rounded-3xl shadow-xl">
+      <div id="title" className="w-full h-1/6">
+        <Title />
+      </div>
+
+      <div id="main" className="w-5/6 h-2/3 flex items-center justify-center -mt-4 mb-4">
+        <div className="w-1/3 h-full flex items-center justify-center">
+          <Descript />
+        </div>
+        <div className="w-2/3 h-full flex items-center justify-center">
+          <SumLayout isStart={isStart} summation={summation} isLoading={isLoading} errorMessage={errorMessage} />
+        </div>
+      </div>
+      
+      <div className="w-full h-1/4 flex items-center justify-center">
         <div
           id="text창"
-          className="flex items-center justify-between p-8 space-x-4 mb-4 w-5/6 h-20 rounded-3xl border border-gray-200 shadow-xl text-sm lg:text-base 2xl:text-base"
+          className="flex items-center justify-end p-8 space-x-4 mb-4 w-5/6 h-20 rounded-3xl border border-gray-200 shadow-xl text-sm lg:text-base 2xl:text-base"
         >
-          <div className="flex items-center justify-between space-x-4">
-            <div className="text-nowrap">요약 언어</div>
-            <select className="w-24 h-12 rounded-xl p-2 border-none">
-              <option>한국어</option>
-              <option>English</option>
-            </select>
-          </div>
+          <RecordedAudio audioURL={audioURL} />
           <div className="flex space-x-4 items-center justify-center">
             <RecordingButton
               isRecording={isRecording}

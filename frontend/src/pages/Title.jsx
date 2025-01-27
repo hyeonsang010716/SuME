@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-const Title = ( {isClick} ) => {
+const Title = () => {
   const Summary = "Summary";
   const Su = "Su";
   const MEETING = "MEETING";
@@ -12,18 +12,18 @@ const Title = ( {isClick} ) => {
   useEffect(() => {
     let timeout;
 
-    if (isHovered && !isClick) {
+    if (isHovered) {
       // 마우스 올릴 때 확장
       timeout = animateText(Su, Summary, Su_setText);
       timeout = animateText(ME, MEETING, ME_setText);
-    } else if(!isClick) {
+    } else {
       // 마우스 내릴 때 축소
       timeout = animateText(Summary, Su, Su_setText);
       timeout = animateText(MEETING, ME, ME_setText);
     }
 
     return () => clearTimeout(timeout);
-  }, [isHovered, isClick]);
+  }, [isHovered]);
 
   const animateText = (start, end, callback) => {
     const steps = [];
@@ -64,7 +64,8 @@ const Title = ( {isClick} ) => {
       >
         <Link
           to="/"
-          className="block text-white text-xl font-bold transition-all duration-300 text-center"
+          className="block text-2xl font-bold transition-all duration-300 text-center"
+          style={{color:"#6b6b6b"}}
         >
           {Su_text}
           {ME_text}

@@ -19,15 +19,10 @@ const SumLayout = ({ isStart, summation, isLoading, errorMessage }) => {
   return (
     <div
       id="top"
-      className="w-full h-5/6 flex flex-col items-center justify-start"
+      className="w-3/4 h-full flex flex-col items-center justify-start"
     >
-      <div className="flex w-full items-start justify-center">
-        <p className="text-xl text-gray-500 font-bold mb-4">Summary MEETING</p>
-      </div>
-      <div 
-        className={`${
-          isStart ? "w-5/6" : "w-1/2"
-        } h-2/3 rounded-2xl p-8 shadow-md transition-all duration-300`}
+      <div
+        className=" h-full w-full rounded-2xl p-8 shadow-md transition-all duration-300"
         style={{ background: "#F4F4F5" }}
       >
         <div className="text-center mb-4">
@@ -35,7 +30,7 @@ const SumLayout = ({ isStart, summation, isLoading, errorMessage }) => {
             <p>요약 처리 중...</p>
           ) : (
             <div className="flex items-center justify-center relative">
-              <p className="no-wrap mr-2">{summation || errorMessage || "녹음을 통해 회의를 요약하세요."}</p>
+              <p className="no-wrap mr-2" style={{color:"#6B6B6B"}}>{summation || errorMessage || "녹음을 통해 회의를 요약하세요."}</p>
               {summation && (
                 <button
                   className="text-gray-500 hover:text-gray-700 absolute top-0 right-0 focus:outline-none"
