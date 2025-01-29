@@ -25,7 +25,7 @@ const Login = () => {
   return (
     <div
       id="div2"
-      className="flex flex-col items-center h-3/4 w-[800px] bg-white shadow-none md:shadow-xl p-8 rounded-none md:rounded-[60px]"
+      className="flex flex-col items-center h-[525px] w-[800px] bg-white shadow-none md:shadow-xl p-8 rounded-none md:rounded-[60px]"
     >
       <div
         id="title"

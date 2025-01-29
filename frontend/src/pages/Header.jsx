@@ -7,7 +7,7 @@ import "../App.css";
 
 const Header = ( {isMainPage} ) => {
   return (
-    <header id="div1" className={`relative bg-white h-3/4 rounded-none ${isMainPage ? "md:w-[1200px]" : "md:w-[400px]"} md:rounded-3xl shadow-none md:shadow-xl w-full`}>
+    <header id="div1" className={`relative bg-white rounded-none md:rounded-[60px] xl:rounded-3xl  ${isMainPage ? "h-[525px] xl:w-[600px]" : " h-[300px] xl:h-[525px] xl:w-[400px]"} shadow-none md:shadow-xl w-full`}>
       <Link
         to="/login"
         className="absolute right-8 top-8 flex items-center justify-center w-10 h-10 rounded-full text-base font-semibold transition-all duration-200 text-gray-500 hover:text-pink-400"

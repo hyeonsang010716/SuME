@@ -80,7 +80,7 @@ const Mainpage = () => {
   }, [isRecording, recordingStartTime]);
 
   return (
-    <div id="div2" className="flex flex-col items-center h-3/4 bg-white shadow-none md:shadow-xl rounded-none md:rounded-[60px] pt-4 w-full md:w-[800px]">
+    <div id="div2" className="flex flex-col items-center h-[525px] bg-white shadow-none md:shadow-xl rounded-none md:rounded-[60px] pt-4 w-full md:w-[800px]">
       <div id="title" className="w-full h-1/6 block text-2xl font-bold transition-all duration-200 text-center text-gray-500">
         Summary MEETING
       </div>
