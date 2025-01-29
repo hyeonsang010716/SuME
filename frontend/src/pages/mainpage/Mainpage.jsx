@@ -2,9 +2,7 @@ import React, { useState, useEffect } from "react";
 import TimerDisplay from "./TimerDisplay";
 import RecordingButton from "./RecordingButton";
 import RecordedAudio from "./RecordedAudio";
-import Title from "../Title";
 import SumLayout from "./SumLayout";
-import Descript from "./Descript";
 import API from "../../API";
 import "../../App.css"
 
@@ -82,24 +80,21 @@ const Mainpage = () => {
   }, [isRecording, recordingStartTime]);
 
   return (
-    <div id="div2" className="flex flex-col items-center w-2/3 h-3/4 bg-white rounded-3xl shadow-xl">
-      <div id="title" className="w-full h-1/6">
-        <Title />
+    <div id="div2" className="flex flex-col items-center h-3/4 bg-white shadow-none md:shadow-xl rounded-none md:rounded-[60px] pt-4 w-full md:w-[800px]">
+      <div id="title" className="w-full h-1/6 block text-2xl font-bold transition-all duration-200 text-center text-gray-500">
+        Summary MEETING
       </div>
 
-      <div id="main" className="w-5/6 h-2/3 flex items-center justify-center -mt-4 mb-4">
-        <div className="w-1/3 h-full flex items-center justify-center">
-          <Descript />
-        </div>
-        <div className="w-2/3 h-full flex items-center justify-center">
-          <SumLayout isStart={isStart} summation={summation} isLoading={isLoading} errorMessage={errorMessage} />
+      <div id="main" className="w-full h-[300px] flex flex-col md:flex-row items-center justify-center mt-0 md:-mt-4 mb-0 md:mb-4">
+        <div className={`w-full ${isStart ? "md:w-5/6" : "md:w-1/2"} h-[300px] flex items-center justify-center transition-all duration-150`}>
+          <SumLayout isStart={isStart} isRecording={isRecording} summation={summation} isLoading={isLoading} errorMessage={errorMessage} />
         </div>
       </div>
       
-      <div className="w-full h-1/4 flex items-center justify-center">
+      <div className="w-full h-1/4 flex items-center justify-center mt-8 md:mt-0">
         <div
           id="text창"
-          className="flex items-center justify-end p-8 space-x-4 mb-4 w-5/6 h-20 rounded-3xl border border-gray-200 shadow-xl text-sm lg:text-base 2xl:text-base"
+          className="flex items-center justify-end p-8 bg-[#F4F4F5] space-x-4 mb-4 w-5/6 h-20 rounded-3xl shadow-xl border-2 border-white text-sm lg:text-base 2xl:text-base"
         >
           <RecordedAudio audioURL={audioURL} />
           <div className="flex space-x-4 items-center justify-center">

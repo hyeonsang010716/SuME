@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCopy, faCheck } from "@fortawesome/free-solid-svg-icons";
 
-const SumLayout = ({ isStart, summation, isLoading, errorMessage }) => {
+const SumLayout = ({ isStart, isRecording, summation, isLoading, errorMessage }) => {
   const [isCopied, setIsCopied] = useState(false);
 
   const handleCopy = () => {
@@ -19,18 +19,19 @@ const SumLayout = ({ isStart, summation, isLoading, errorMessage }) => {
   return (
     <div
       id="top"
-      className="w-3/4 h-full flex flex-col items-center justify-start"
+      className="w-full h-[350px] pt-8 md:pt-0 md:h-full flex flex-col items-center justify-start"
     >
       <div
-        className=" h-full w-full rounded-2xl p-8 shadow-md transition-all duration-300"
+        className={`h-full w-full rounded-2xl p-4 shadow-md transition-all duration-300 border-2 border-white`}
         style={{ background: "#F4F4F5" }}
       >
-        <div className="text-center mb-4">
+        <div className="mb-4">
           {isLoading ? (
-            <p>요약 처리 중...</p>
+            <p className="no-wrap mr-2 font-bold text-lg" style={{color:"#6B6B6B"}}>요약 처리 중...</p>
           ) : (
-            <div className="flex items-center justify-center relative">
-              <p className="no-wrap mr-2" style={{color:"#6B6B6B"}}>{summation || errorMessage || "녹음을 통해 회의를 요약하세요."}</p>
+            <div className="flex flex-col items-start justify-start relative">
+              <h1 className="no-wrap mr-2 font-bold text-lg" style={{color:"#6B6B6B"}}>{isRecording ? "녹음 중..." : "요약내용"}</h1>
+              <p className="no-wrap mr-2 font-bold text-md" style={{color:"#6B6B6B"}}>{summation || errorMessage}</p>
               {summation && (
                 <button
                   className="text-gray-500 hover:text-gray-700 absolute top-0 right-0 focus:outline-none"

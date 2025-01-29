@@ -5,7 +5,7 @@ const RecordedAudio = ({ audioURL }) => {
 
   return (
     <div>
-      <audio controls src={audioURL} className="mt-2" />
+      <audio controls src={audioURL} className="mt-0" />
     </div>
   );
 };
