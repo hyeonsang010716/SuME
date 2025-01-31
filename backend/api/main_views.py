@@ -14,7 +14,7 @@ bp.logger.setLevel(logging.INFO)  # 로그 레벨 설정
 
 UPLOAD_PATH = 'uploads'
 os.makedirs(UPLOAD_PATH, exist_ok=True)
-filename = "test.mp3"
+filename = "test.wav"
 file_path = "uploads/"+filename
 
 
