@@ -19,7 +19,10 @@ const Mainpage = () => {
 
   const startRecording = async () => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const stream = await navigator.mediaDevices.getUserMedia({  audio: {
+        sampleRate: 48000,
+        channelCount: 1,   
+      }, });
       const recorder = new MediaRecorder(stream);
       setIsStart(true);
 
@@ -80,25 +83,23 @@ const Mainpage = () => {
   }, [isRecording, recordingStartTime]);
 
   return (
-    <div
-      className="flex flex-col items-center justify-end h-screen"
-      style={{ background: "#E4E4E7" }}
-    >
-      <div className="w-full flex flex-col items-center justify-end h-full rounded-none pt-12 shadow-2xl bg-gray-100 border-10 lg:w-5/6 lg:h-5/6 lg:pt-0 lg:rounded-t-2xl 2xl:w-3/4">
-        
-        <SumLayout isStart={isStart} summation={summation} isLoading={isLoading} errorMessage={errorMessage} />
-        <RecordedAudio audioURL={audioURL} />
+    <div id="div2" className="flex flex-col items-center h-[525px] bg-white shadow-none md:shadow-xl rounded-none md:rounded-[60px] pt-4 w-full md:w-[800px]">
+      <div id="title" className="w-full h-1/6 block text-2xl font-bold transition-all duration-200 text-center text-gray-500">
+        Summary MEETING
+      </div>
+
+      <div id="main" className="w-full h-[300px] flex flex-col md:flex-row items-center justify-center mt-0 md:-mt-4 mb-0 md:mb-4">
+        <div className={`w-full ${isStart ? "md:w-5/6" : "md:w-1/2"} h-[300px] flex items-center justify-center transition-all duration-150`}>
+          <SumLayout isStart={isStart} isRecording={isRecording} summation={summation} isLoading={isLoading} errorMessage={errorMessage} />
+        </div>
+      </div>
+      
+      <div className="w-full h-1/4 flex items-center justify-center mt-8 md:mt-0">
         <div
           id="text창"
-          className="flex items-center justify-between p-8 space-x-4 mb-4 w-5/6 h-20 rounded-3xl border border-gray-200 shadow-xl text-sm lg:text-base 2xl:text-base"
+          className="flex items-center justify-end p-8 bg-[#F4F4F5] space-x-4 mb-4 w-5/6 h-20 rounded-3xl shadow-xl border-2 border-white text-sm lg:text-base 2xl:text-base"
         >
-          <div className="flex items-center justify-between space-x-4">
-            <div className="text-nowrap">요약 언어</div>
-            <select className="w-24 h-12 rounded-xl p-2 border-none">
-              <option>한국어</option>
-              <option>English</option>
-            </select>
-          </div>
+          <RecordedAudio audioURL={audioURL} />
           <div className="flex space-x-4 items-center justify-center">
             <RecordingButton
               isRecording={isRecording}
