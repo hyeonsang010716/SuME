@@ -41,7 +41,7 @@ const AppContent = () => {
           initial={{ opacity: 0, x: isxl ? 0 : 100, y:0 }}
           animate={{ opacity: 1, x: isxl ? 0 : 0, y: isxl ? 100 : 0 }}
           transition={{ type: "spring", stiffness: 200, damping: 18 }}
-          className="w-full h-[700px] pb-20 xl:pb-0 xl:w-[1000px] flex items-center justify-center xl:justify-start"
+          className="w-full h-[700px] xl:w-[1000px] flex items-center justify-center xl:justify-start"
         >
           <Routes>
             <Route path="/note" element={<Mainpage />} />
