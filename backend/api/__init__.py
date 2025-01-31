@@ -23,6 +23,8 @@ def create_app():
     # 환경 변수 정의
     env = os.getenv("FLASK_ENV", "default")
     app.config.from_object(config[env])
+    app.config['JSON_AS_ASCII'] = False
+    app.config['JSONIFY_PRETTYPRINT_REGULAR'] = False
 
     # DATABASE 초기화 및 생성
     db.init_app(app)
