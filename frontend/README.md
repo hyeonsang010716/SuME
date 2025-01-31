@@ -1,3 +1,11 @@
+## Clone 및 Pull 시
+
+1. node_modules 설치
+
+```
+npm install
+```
+
 ## 프론트트엔드 사용 방법
 
 1. React 실행
@@ -31,6 +39,6 @@ npm start
             |- RecordedAudio.jsx         # Audio 재생 Component
             |- RecordingButton.jsx       # Recording Button Component
             |- SumLayout.jsx             # 요약 창 Component
-            |- TextInputForm.jsx         # text post Component (미사용용)
+            |- TextInputForm.jsx         # text post Component (미사용)
             |- TimerDisplay.jsx          # 타이머 Component
 ```

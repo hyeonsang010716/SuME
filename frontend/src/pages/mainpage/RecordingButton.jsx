@@ -5,7 +5,7 @@ import { faStop, faMicrophone } from "@fortawesome/free-solid-svg-icons";
 const RecordingButton = ({ isRecording, onClick }) => {
   return (
     <button
-      className={`w-12 h-12 rounded-full flex items-center justify-center text-white shadow-md ${
+      className={`w-12 h-12 rounded-full flex items-center justify-center text-white shadow-md border-2 border-white ${
         isRecording ? "bg-pink-500 animate-pulse" : "bg-pink-400 hover:bg-pink-500 transition duration-300 "
       }`}
       onClick={onClick}

@@ -1,73 +1,57 @@
-import { useState } from "react";
+import React from "react";
 import Title from "./Title";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCaretLeft, faCaretRight } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUser } from "@fortawesome/free-solid-svg-icons";
+import "../App.css";
 
-const Header = () => {
-  // const [notes, setNotes] = useState([]);
-  const [isClick, setIsClick] = useState(false);
-/*
-  const addNote = () => {
-    const newNote = { id: Date.now(), content: `Note ${notes.length + 1}` };
-    setNotes([...notes, newNote]);
-  };
-*/
-  const Sidebar = () => {
-    setIsClick(!isClick);
-    if (isClick){
-
-    }
-  }
-
+const Header = ( {isMainPage} ) => {
   return (
-    <header
-      className={`flex justify-center bg-gray-500 shadow-2xl h-full pl-0 w-full lg:pl-4 ${
-      isClick ? "lg:w-24" : "lg:w-80"
-    }`}
-    >
-      <div>
+    <header id="div1" className={`relative bg-white rounded-none md:rounded-[60px] xl:rounded-3xl  ${isMainPage ? "h-[525px] xl:w-[600px]" : " h-[525px] xl:h-[525px] xl:w-[400px]"} shadow-none md:shadow-xl w-full`}>
+      <Link
+        to="/login"
+        className="absolute right-8 top-8 flex items-center justify-center w-10 h-10 rounded-full text-base font-semibold transition-all duration-200 text-gray-500 hover:text-pink-400"
+      >
+        <FontAwesomeIcon icon={faUser} size="xl" />
+      </Link>
+
+      <div id="title" className="flex items-center justify-center w-full h-1/6">
+        <Title />
+      </div>
+      
+      <div id="mid" className="flex items-center justify-center w-full h-1/6">
         <Link
           to="/login"
-          className="absolute right-8 top-4 text-base font-semibold text-white hover:text-gray-400 rounded transition duration-300 lg:text-black"
+          className="w-full h-full flex items-center justify-center"
         >
-          Login
+          <div
+            className="flex items-center justify-center w-2/3 h-5/6 font-bold rounded-3xl border-2 border-white shadow-xl opacity-50 bg-gray-300 hover:bg-gray-400 transition duration-300"
+          >
+            로그인하러 가기
+          </div>
         </Link>
       </div>
-      <Title isClick={isClick} />
-      <div className="invisible lg:visible">
-        <button
-          className="flex items-center justify-center mt-1 w-8 h-10 text-white"
-          onClick={Sidebar}
+      <div id="mid" className="flex items-center justify-center w-full h-1/6">
+        <Link
+          to="/note"
+          className="w-full h-full flex items-center justify-center"
         >
-          {!isClick ? (
-            <FontAwesomeIcon icon={faCaretLeft} />
-          ) : (
-            <FontAwesomeIcon icon={faCaretRight} />
-          )}
-        </button>
-      </div>
-      <div>
-        {/**<div>
-          <button
-            onClick={addNote}
-            className="flex items-center justify-center w-full border-t border-b h-24 text-white text-sm font-medium hover:bg-gray-600 px-4 py-2 rounded transition duration-300"
+          <div
+            className="flex items-center justify-center w-2/3 h-5/6 font-bold rounded-3xl border-2 border-white shadow-xl opacity-50 bg-gray-300 hover:bg-gray-400 transition duration-300"
           >
-            + Add Note
-          </button>
-        </div>
-        <div className="mt-4">
-          {notes.map((note) => (
-            <Link
-              to={`/note/${note.id}`}
-              key={note.id}
-              className="flex items-center justify-center w-full border-t border-b h-24 text-white text-sm font-medium hover:bg-gray-600 px-4 py-2 rounded transition duration-300 mb-2"
-            >
-              {note.content}
-            </Link>
-          ))}
-        </div>**/}
+            회의 요약하러 가기
+          </div>
+        </Link>
       </div>
+      {/*
+      <div id="main" className="flex items-center justify-center w-full h-2/3">
+        <div
+          className="w-2/3 h-5/6 rounded-3xl border-2 border-white shadow-xl opacity-50"
+          style={{background:"#D9D9D9"}}
+        >
+        </div>
+      </div>
+      */}
     </header>
   );
 };
