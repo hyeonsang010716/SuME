@@ -22,7 +22,7 @@ file_path = "uploads/"+filename
 def upload_audio():
     file = request.files['audio']
     file.save(file_path)
-    # Audio.create(filname=filename, file_path=file_path)
+    Audio.create(filename, file_path)
 
     return jsonify({"message": "File uploaded successfully", "file_path": file_path}), 200
 

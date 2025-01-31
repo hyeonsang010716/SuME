@@ -3,6 +3,8 @@ from datetime import datetime
 
 
 class Audio(db.Model):
+    __tablename__ = 'audio'
+
     id = db.Column(db.Integer, primary_key=True)
     filename = db.Column(db.String(200), nullable=False)
     file_path = db.Column(db.String(200), nullable=False)
