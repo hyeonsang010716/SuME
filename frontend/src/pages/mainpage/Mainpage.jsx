@@ -19,7 +19,10 @@ const Mainpage = () => {
 
   const startRecording = async () => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const stream = await navigator.mediaDevices.getUserMedia({  audio: {
+        sampleRate: 48000,
+        channelCount: 1,   
+      }, });
       const recorder = new MediaRecorder(stream);
       setIsStart(true);
 
