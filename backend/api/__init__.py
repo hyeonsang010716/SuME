@@ -7,7 +7,7 @@ import logging
 import os
 
 from api.config import config
-from models.stt.google_cloude import rInit_GoogleCloudeSTT
+
 
 load_dotenv()
 db = SQLAlchemy()
@@ -16,8 +16,6 @@ migrate = Migrate()
 
 def create_app():
     app = Flask(__name__)
-    
-    rInit_GoogleCloudeSTT()
 
     CORS(app)
     logging.basicConfig(level=logging.DEBUG)

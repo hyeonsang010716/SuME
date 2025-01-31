@@ -14,15 +14,15 @@ bp.logger.setLevel(logging.INFO)  # 로그 레벨 설정
 
 UPLOAD_PATH = 'uploads'
 os.makedirs(UPLOAD_PATH, exist_ok=True)
-filename = "Trip (Feat. Hannah).wav"
-file_path = "./example/stt/example_audio_file/Trip (Feat. Hannah).wav"
+filename = "test.mp3"
+file_path = "uploads/"+filename
 
 
 @bp.route("/audio", methods=['POST'])
 def upload_audio():
     file = request.files['audio']
     file.save(file_path)
-    Audio.create(filname=filename, file_path=file_path)
+    # Audio.create(filname=filename, file_path=file_path)
 
     return jsonify({"message": "File uploaded successfully", "file_path": file_path}), 200
 
