@@ -2,9 +2,9 @@ from flask import Blueprint, request, jsonify
 import logging
 import os
 
-from db_models.audio import Audio
+from api.models import Audio
+from models.stt.google_cloude import rCall_RunSTT
 
-from flask import Blueprint
 
 bp = Blueprint('main', __name__)
 
@@ -14,19 +14,20 @@ bp.logger.setLevel(logging.INFO)  # 로그 레벨 설정
 
 UPLOAD_PATH = 'uploads'
 os.makedirs(UPLOAD_PATH, exist_ok=True)
+filename = "Trip (Feat. Hannah).wav"
+file_path = "./example/stt/example_audio_file/Trip (Feat. Hannah).wav"
 
 
 @bp.route("/audio", methods=['POST'])
 def upload_audio():
     file = request.files['audio']
-    filename = "test.mp3"
-    file_path = os.path.join(UPLOAD_PATH, filename)
-    
     file.save(file_path)
-    
+    Audio.create(filname=filename, file_path=file_path)
+
     return jsonify({"message": "File uploaded successfully", "file_path": file_path}), 200
 
 
 @bp.route("/audio", methods=['GET'])
 def send_audio():
-    return {"message": "test"}, 200
+    txt = rCall_RunSTT(filename, file_path)
+    return {"message": txt, "status": "test"}, 200
