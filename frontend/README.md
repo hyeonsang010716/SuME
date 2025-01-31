@@ -1,3 +1,11 @@
+## Clone 및 Pull 시
+
+1. node_modules 설치
+
+```
+npm install
+```
+
 ## 프론트트엔드 사용 방법
 
 1. React 실행
