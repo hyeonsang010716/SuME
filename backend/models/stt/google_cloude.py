@@ -20,7 +20,6 @@ def rInit_GoogleCloudeSTT() -> None:
     
     mgConfig = speech.RecognitionConfig(
         encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
-        sample_rate_hertz=48000,
         language_code="ko-KR",  
     )
     
@@ -29,7 +28,8 @@ def rInit_GoogleCloudeSTT() -> None:
     return None
 
 def rCall_RunSTT(file_name: str, file_path: str) -> str:
-    """STT 실행 함수 : 파일 이름 전달 필수"""
+    
+    mCall_FormatWavFile(file_path)
     
     mCall_UploadBlob(mgBucketName, file_path, file_name)
     
@@ -38,8 +38,21 @@ def rCall_RunSTT(file_name: str, file_path: str) -> str:
     
     mCall_DeleteBlob(mgBucketName, file_name)
     
+    print("***********************" , result_text, "***********************")
+    
     return result_text
 
+from pydub import AudioSegment
+
+def mCall_FormatWavFile(input_path : str) -> None:
+
+    audio = AudioSegment.from_file(input_path)
+
+    audio = audio.set_sample_width(2).set_frame_rate(16000).set_channels(1)
+
+    audio.export(input_path, format="wav")
+
+    return None
 
 
 def mCall_UploadBlob(bucket_name:str, source_file_path:str, file_name:str) -> None:
