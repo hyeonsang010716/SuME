@@ -5,66 +5,36 @@ from langchain_core.prompts import PromptTemplate
 from typing import TypedDict
 from langgraph.graph import StateGraph, START, END
 
+from models.summary.prompts import rgSummary_Prompt
+
 mgLLm = None
-mgPrompt = None
 mgChain = None
-mgSummary_Prompt = """
-[회의내용]
-{content}
-
-당신은 회의 내용을 정리하는 AI입니다. 주어진 회의 내용을 이해하고, 가독성 좋은 형식으로 간결하게 정리하세요.
-
-📌 정리 기준:
-1. **회의 주제**: 회의 주제와 목적을 정리합니다
-2. **핵심 내용 요약**: 회의에서 논의된 주요 사항을 간결하고 명확하게 요약합니다.
-3. **결론 및 결정사항**: 회의에서 결정된 사항이나 합의된 내용을 정리합니다.
-4. **Action Items (TODOs)**: 실행해야 할 작업 항목을 정리하고, 담당자와 마감기한를 포함할 수 있다면 명시합니다.
-5. **기타 논의 사항**: 새로운 아이디어나 제안, 결정되지는 않았지만 추가 논의가 필요한 사항을 정리합니다.
-
-[유의사항]
-1. 정리한 내용에서 회의 내용과 상관없는 비속어와 음란한 표현이 있으면 "부적절한 단어가 포함되어 있습니다"만 출력합니다.
-2. 회의 내용을 왜곡시켜서는 안됩니다.
-"""
+mgGraph = None
 
 class State(TypedDict):
     summary_response : str # 생성된 회의 요약
     content : str  # 회의 내용
 
 
-def rInit_Summary() -> None:
+def rInit_SummaryChain() -> None:
     """Gemini Summary Init func"""
-    global mgLLm, mgPrompt, mgChain
+    global mgLLm, mgChain
 
     mgLLm = ChatGoogleGenerativeAI(
         model="gemini-1.5-flash-latest",
     )
 
-    mgPrompt = PromptTemplate(
-        template=mgSummary_Prompt,
+    prompt = PromptTemplate(
+        template=rgSummary_Prompt,
         input_variables=["content"],
     )
     
-    mgChain = mgPrompt | mgLLm | StrOutputParser()
+    mgChain = prompt | mgLLm | StrOutputParser()
     
     return None
 
-def rCall_Graph(content: str) -> str:
-    """Summary 실행함수, 회의내용을 필요"""
-    graph_builder = StateGraph(State)
-
-    graph_builder.add_node("generate_summary", mCall_Generate_Summary)
-
-    graph_builder.add_edge(START, "generate_summary")
-    graph_builder.add_edge("generate_summary", END)
-
-    graph = graph_builder.compile()
-
-    response = graph.invoke({"content" : content})
-
-    return response["summary_response"]
-
-
 def mCall_Generate_Summary(state: State) -> dict:
+    """요약 생성 함수"""
     response = mgChain.invoke({"content" : state["content"]})
 
     if response == "부적절한 단어가 포함되어 있습니다":
@@ -72,6 +42,27 @@ def mCall_Generate_Summary(state: State) -> dict:
     
     return {"summary_response" : response}
 
+def rInit_Graph() -> None:
+    """그래프 초기화 함수"""
+    global mgGraph
+    
+    graph_builder = StateGraph(State)
+
+    graph_builder.add_node("generate_summary", mCall_Generate_Summary)
+
+    graph_builder.add_edge(START, "generate_summary")
+    graph_builder.add_edge("generate_summary", END)
+
+    mgGraph = graph_builder.compile()
+    
+    return None
+
+def rCall_GetSummary(content: str) -> str:
+    """Summary 실행함수, 회의내용을 필요"""
+
+    response = mgGraph.invoke({"content" : content})
+
+    return response["summary_response"]
 
 if __name__ == "__main__":
     load_dotenv()
