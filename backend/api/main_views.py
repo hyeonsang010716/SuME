@@ -5,6 +5,7 @@ import json
 import os
 
 from api.models import Audio
+from api.utils import change_to_type
 from models.stt.google_cloude import rCall_RunSTT
 
 
@@ -24,8 +25,8 @@ file_path = "uploads/"+filename
 @bp.route("/audio", methods=['POST'])
 def upload_audio():
     try:
-        file = request.files['audio']
-        file.save(file_path)
+        audio = change_to_type(request.files['audio'])
+        audio.export(file_path, format='wav')
         Audio.create(filename, file_path)
 
         return jsonify({"message": "File uploaded successfully", 'filename': filename, "file_path": file_path}), 200
