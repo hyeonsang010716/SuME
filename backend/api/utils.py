@@ -1,17 +1,18 @@
-from pydub import AudioSegment
+from datetime import datetime
+from typing import Tuple
 import os
 
 
-def change_to_type(file):
-    # 임시 파일로 저장
-    temp_name = "temp_.wav"
-    temp_path = "uploads/"+temp_name
-    file.save(temp_path)
-    
-    audio = AudioSegment.from_file(temp_path)
-    
-    if audio.channels > 1:
-        audio = audio.set_channels(1)
-    
-    os.remove(temp_path)
-    return audio
+def save_audio(file) -> Tuple[str, str]:
+    UPLOAD_PATH = 'uploads'
+    os.makedirs(UPLOAD_PATH, exist_ok=True)
+
+    filename = f"audio_{datetime.now()}.wav"
+    file_path = UPLOAD_PATH+"/"+filename
+    file.save(file_path)
+
+    return filename, file_path
+
+def delete_audio(file_path: str):
+    if os.path.exists(file_path):
+        os.remove(file_path)
