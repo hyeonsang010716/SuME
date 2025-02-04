@@ -10,7 +10,7 @@ const Header = ( {isMainPage} ) => {
     <header id="div1" className={`relative bg-white rounded-none md:rounded-[60px] xl:rounded-3xl  ${isMainPage ? "h-[525px] xl:w-[600px]" : " h-[525px] xl:h-[525px] xl:w-[400px]"} shadow-none md:shadow-xl w-full`}>
       <Link
         to="/login"
-        className="absolute right-8 top-8 flex items-center justify-center w-10 h-10 rounded-full text-base font-semibold transition-all duration-200 text-gray-500 hover:text-pink-400"
+        className="absolute right-2 md:right-8 top-0 md:top-8 flex items-center justify-center w-10 h-10 rounded-full text-base font-semibold transition-all duration-200 text-gray-500 hover:text-pink-400"
       >
         <FontAwesomeIcon icon={faUser} size="xl" />
       </Link>
