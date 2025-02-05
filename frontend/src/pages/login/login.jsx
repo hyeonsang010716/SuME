@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { getCsrfToken } from "../../csrf"; // CSRF 토큰 가져오는 함수
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 
 const API_URL = "http://localhost:5000";
 
@@ -81,7 +83,7 @@ const Login = () => {
               onClick={togglePasswordVisibility}
               className="text-gray-400 absolute top-3 right-4 cursor-pointer"
             >
-              {passwordVisible ? "👁️" : "🙈"}
+              {passwordVisible ? <FontAwesomeIcon icon={faEye} /> : <FontAwesomeIcon icon={faEyeSlash} />}
             </span>
           </div>
         </div>

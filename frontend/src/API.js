@@ -9,6 +9,10 @@ const API = {
     try {
       const csrfToken = getStoredCsrfToken();
 
+      if (!csrfToken) {
+        throw new Error("CSRF Token is missing.");
+      }
+
       const response = await fetch(`${API_URL}/audio`, {
         method: "POST",
         headers: {
