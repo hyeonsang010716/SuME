@@ -11,11 +11,13 @@ const AppContent = () => {
   const isMainPage = location.pathname === "/" || location.pathname === "";
   const [isMdScreen, setIsMdScreen] = useState(window.innerWidth < 768);
   const [isxl, setIsxl] = useState(window.innerWidth < 1280);
+  const [left, setLeft] = useState(300);
 
   useEffect(() => {
     const handleResize = () => {
       setIsMdScreen(window.innerWidth < 768);
       setIsxl(window.innerWidth < 1280);
+      setLeft(window.innerWidth/12)
     };
 
     window.addEventListener("resize", handleResize);
@@ -28,7 +30,7 @@ const AppContent = () => {
       <motion.div
         id="div1"
         initial={{ x: isxl ? 0 : 550, y: 0 }}
-        animate={{ x: isMainPage ? 0 : (isxl ? 0 : 300), y: isxl ? 50 : 0 }}
+        animate={{ x: isMainPage ? 0 : (isxl ? 0 : left), y: isMainPage ? 0 : (isxl ? (isMdScreen ? 0 : 50) : 0) }}
         transition={{ type: "spring", stiffness: 200, damping: 18}}
         className={`w-full h-[525px] xl:h-[700px] flex items-start md:w-[800px] md:items-center ${isMainPage ? "justify-center" : ""}`}
       >
@@ -39,7 +41,7 @@ const AppContent = () => {
         <motion.div
           id="div2" 
           initial={{ opacity: 0, x: isxl ? 0 : 100, y:0 }}
-          animate={{ opacity: 1, x: isxl ? 0 : 0, y: isxl ? 100 : 0 }}
+          animate={{ opacity: 1, x: isxl ? 0 : 0, y: isxl ? (isMdScreen ? -200 : -150) : 0 }}
           transition={{ type: "spring", stiffness: 200, damping: 18 }}
           className="w-full h-[700px] xl:w-[1000px] flex items-center justify-center xl:justify-start"
         >

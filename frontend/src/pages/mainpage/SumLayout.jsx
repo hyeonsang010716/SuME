@@ -22,8 +22,13 @@ const SumLayout = ({ isStart, isRecording, summation, isLoading, errorMessage })
       className="w-full h-[350px] pt-8 md:pt-0 md:h-full flex flex-col items-center justify-start"
     >
       <div
-        className={`h-full w-full rounded-2xl p-4 shadow-md transition-all duration-300 border-2 border-white`}
-        style={{ background: "#F4F4F5" }}
+        className={`h-full w-full rounded-2xl p-4 shadow-md transition-all duration-300 overflow-y border-2 border-white`}
+        style={{
+          background: "#F4F4F5",
+          whiteSpace: "pre-wrap",
+          wordBreak: "break-word",
+          overflowX: "hidden"
+        }}
       >
         <div className="mb-4">
           {isLoading ? (

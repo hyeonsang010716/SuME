@@ -5,9 +5,10 @@
 4. 구글 클라우드 storage 버킷 생성 
 
 ### 환경설졍
-1. pip install -r requirement.txt
-2. .env파일 생성 후 내용으로 GOOGLE_APPLICATION_CREDENTIALS="키 경로"
-3. mgBucketName 설정한 버킷 이름 할당
+1. sudo apt update / sudo apt install ffmpeg 설치
+2. pip install -r requirement.txt
+3. .env파일 생성 후 내용으로 GOOGLE_APPLICATION_CREDENTIALS="키 경로"
+4. mgBucketName 설정한 버킷 이름 할당
 
 ### 주의사항
 1. 스테레오가 아닌 모노채널인 음성파일만 가능

@@ -13,15 +13,21 @@ const Mainpage = () => {
   const [audioURL, setAudioURL] = useState(null);
   const [recordingStartTime, setRecordingStartTime] = useState(null);
   const [elapsedTime, setElapsedTime] = useState("00:00");
-  const [summation, setSummation] = useState("");
+  const [summation, setSummation] = useState(() => {
+    return sessionStorage.getItem("summation") || "";
+  });
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+
+  useEffect(() => {
+    sessionStorage.setItem("summation", summation);
+  }, [summation]);
 
   const startRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({  audio: {
         sampleRate: 48000,
-        channelCount: 1,   
+        channelCount: 1,
       }, });
       const recorder = new MediaRecorder(stream);
       setIsStart(true);
@@ -89,7 +95,7 @@ const Mainpage = () => {
       </div>
 
       <div id="main" className="w-full h-[300px] flex flex-col md:flex-row items-center justify-center mt-0 md:-mt-4 mb-0 md:mb-4">
-        <div className={`w-full ${isStart ? "md:w-5/6" : "md:w-1/2"} h-[300px] flex items-center justify-center transition-all duration-150`}>
+        <div className={`w-full ${isStart || summation ? "md:w-5/6" : "md:w-1/2"} h-[300px] flex items-center justify-center transition-all duration-150`}>
           <SumLayout isStart={isStart} isRecording={isRecording} summation={summation} isLoading={isLoading} errorMessage={errorMessage} />
         </div>
       </div>

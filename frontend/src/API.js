@@ -1,11 +1,19 @@
+import { getStoredCsrfToken, getCsrfToken } from "./csrf";
+
 const API_URL = "http://localhost:5000";
 
+getCsrfToken();
+
 const API = {
-  //Audio POST
   uploadAudio: async (formData) => {
     try {
+      const csrfToken = getStoredCsrfToken();
+
       const response = await fetch(`${API_URL}/audio`, {
         method: "POST",
+        headers: {
+          "X-CSRFToken": csrfToken,
+        },
         body: formData,
       });
 
@@ -13,44 +21,43 @@ const API = {
         throw new Error("File upload failed");
       }
 
-      return await response.json();
+      const data = await response.json();
+
+      // filename 저장
+      localStorage.setItem("audio_filename", data.filename);
+      localStorage.setItem("audio_file_path", data.file_path);
+
+      return data;
     } catch (error) {
       console.error("Error uploading file:", error);
       throw error;
     }
   },
-  // 텍스트 POST 요청 (챗봇 기능 구현한다면 사용 예정)
-  /*
-  postText: async (text) => {
+
+  getSummation: async () => {
     try {
-      const response = await fetch(`${API_URL}/text`, {
-        method: "POST",
+      const filename = localStorage.getItem("audio_filename");
+      const filePath = localStorage.getItem("audio_file_path");
+
+      if (!filename || !filePath) {
+        throw new Error("No audio file uploaded yet.");
+      }
+
+      const response = await fetch(`${API_URL}/audio`, {
+        method: "GET",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ text }),
+        body: JSON.stringify({ filename, file_path: filePath }),
       });
 
-      if (!response.ok) {
-        throw new Error("Text submission failed");
-      }
-
-      return await response.json();
-    } catch (error) {
-      console.error("Error submitting text:", error);
-      throw error;
-    }
-  },*/
-
-  //요약본 GET
-  getSummation: async () => {
-    try {
-      const response = await fetch(`${API_URL}/audio`);
       if (!response.ok) {
         throw new Error("Failed to fetch Summation");
       }
 
-      return await response.text();
+      const data = await response.json();
+      return data.message;
+      
     } catch (error) {
       console.error("Error fetching Summation:", error);
       throw error;
