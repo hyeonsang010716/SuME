@@ -30,7 +30,7 @@ const API = {
       // filename과 file_path 저장
       localStorage.setItem("audio_filename", data.filename);
       localStorage.setItem("audio_file_path", data.file_path);
-
+      
       return data;
     } catch (error) {
       console.error("Error uploading file:", error);
@@ -62,6 +62,7 @@ const API = {
       }
 
       const data = await response.json();
+      console.log(data)
       return data.message;
       
     } catch (error) {

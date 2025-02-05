@@ -13,9 +13,7 @@ const Mainpage = () => {
   const [audioURL, setAudioURL] = useState(null);
   const [recordingStartTime, setRecordingStartTime] = useState(null);
   const [elapsedTime, setElapsedTime] = useState("00:00");
-  const [summation, setSummation] = useState(() => {
-    return sessionStorage.getItem("summation") || "";
-  });
+  const [summation, setSummation] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -44,6 +42,7 @@ const Mainpage = () => {
           setIsLoading(true);
           await API.uploadAudio(formData);
           const result = await API.getSummation();
+          console.log('main_page: '+ result)
           setSummation(result);
         } catch (err) {
           console.error(err);

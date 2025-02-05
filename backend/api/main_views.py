@@ -1,5 +1,4 @@
 from flask import Blueprint, request, Response, jsonify
-# from datetime import datetime
 import logging
 import json
 import os
@@ -23,7 +22,7 @@ def upload_audio():
         return jsonify({"message": "File uploaded successfully", 'filename': filename, "file_path": file_path}), 200
 
     except Exception as e:
-        return jsonify({'error': str(e)}, 400)
+        return jsonify({'error': str(e)}), 400
 
 
 @bp.route("/audio", methods=['GET'])
@@ -33,7 +32,12 @@ def send_audio():
         file_path = request.args.get('file_path')
         txt = rCall_RunSTT(filename, file_path)
         delete_audio(file_path)
-        return jsonify({"message": txt}, 200)
+        return jsonify({"message": txt}), 200
     
     except Exception as e:
-        return jsonify({'error': str(e)}, 400)
+        return jsonify({'error': str(e)}), 400
+
+# @bp.route('/csrf_token', methods=['GET'])
+# def get_csrf_token():
+#     token = generate_csrf()
+#     return jsonify({'csrf_token':  token})
