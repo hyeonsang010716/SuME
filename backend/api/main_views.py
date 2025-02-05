@@ -29,9 +29,10 @@ def upload_audio():
 @bp.route("/audio", methods=['GET'])
 def send_audio():
     try:
-        data = request.get_json()
-        txt = rCall_RunSTT(data['filename'], data['file_path'])
-        delete_audio(data['file_path'])
+        filename = request.args.get('filename')
+        file_path = request.args.get('file_path')
+        txt = rCall_RunSTT(filename, file_path)
+        delete_audio(file_path)
         return jsonify({"message": txt}, 200)
     
     except Exception as e:
