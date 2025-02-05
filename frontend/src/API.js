@@ -23,7 +23,7 @@ const API = {
 
       const data = await response.json();
 
-      // filename 저장
+      // filename과 file_path 저장
       localStorage.setItem("audio_filename", data.filename);
       localStorage.setItem("audio_file_path", data.file_path);
 
@@ -43,13 +43,15 @@ const API = {
         throw new Error("No audio file uploaded yet.");
       }
 
-      const response = await fetch(`${API_URL}/audio`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ filename, file_path: filePath }),
-      });
+      const response = await fetch(
+        `${API_URL}/audio?filename=${filename}&file_path=${filePath}`,  // path 수정
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Failed to fetch Summation");
