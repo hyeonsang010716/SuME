@@ -1,11 +1,9 @@
-from flask import Blueprint, request, flash, jsonify
-from flask_wtf.csrf import generate_csrf
+from flask import Blueprint, request, jsonify
 import logging
 
 from api.models.audio import Audio
 from api.utils import save_audio, delete_audio
 from models.stt.google_cloude import rCall_RunSTT
-from api.forms import AudioUploadForm
 
 
 bp = Blueprint('main', __name__)
@@ -16,17 +14,22 @@ bp.logger.setLevel(logging.INFO)  # 로그 레벨 설정
 
 @bp.route("/audio", methods=['POST'])
 def upload_audio():
-    form = AudioUploadForm()
-    if form.validate_on_submit():
-        try:
-            audio_file = form.audio.data
-            filename, file_path = save_audio(audio_file)
-            Audio.create(filename, file_path)
-            return jsonify({"message": "File uploaded successfully", 'filename': filename, "file_path": file_path}), 200
-        except Exception as e:
-            return jsonify({'message': 'File uploaded failed'}), 404
-    else:
-        return jsonify({'message': 'Audio를 형식에 맞게 전송해주세요'})
+    try:
+        audio_file = request.files['audio']
+        if not audio_file:
+            raise ValueError("No audio file provided.")
+        
+        bp.logger.info('Upload file')
+        filename, file_path = save_audio(audio_file)
+        Audio.create(filename, file_path)
+        bp.logger.info('Add Audio')
+        return jsonify({"message": "File uploaded successfully", 'filename': filename, "file_path": file_path}), 200
+    except ValueError as ve:
+        bp.logger.error(f'ValueError: {str(ve)}')
+        return jsonify({'message': str(ve)}), 400
+    except Exception as e:
+        bp.logger.error(f'Unexpected error: {str(e)}')
+        return jsonify({'message': 'An unexpected error occurred.'}), 500
 
 
 @bp.route("/audio", methods=['GET'])
@@ -41,9 +44,3 @@ def send_audio():
     
     except Exception as e:
         return jsonify({'error': str(e)}), 400
-
-
-@bp.route('/csrf_token', methods=['GET'])
-def get_csrf_token():
-    token = generate_csrf()
-    return jsonify({'csrf_token':  token})
