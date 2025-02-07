@@ -1,9 +1,8 @@
 from flask import Blueprint, request, Response, jsonify
+from flask_wtf.csrf import generate_csrf
 import logging
-import json
-import os
 
-from api.models import Audio
+from api.models.audio import Audio
 from api.utils import save_audio, delete_audio
 from models.stt.google_cloude import rCall_RunSTT
 
@@ -37,7 +36,7 @@ def send_audio():
     except Exception as e:
         return jsonify({'error': str(e)}), 400
 
-# @bp.route('/csrf_token', methods=['GET'])
-# def get_csrf_token():
-#     token = generate_csrf()
-#     return jsonify({'csrf_token':  token})
+@bp.route('/csrf_token', methods=['GET'])
+def get_csrf_token():
+    token = generate_csrf()
+    return jsonify({'csrf_token':  token})
