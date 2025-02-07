@@ -1,6 +1,4 @@
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from flask_wtf import CSRFProtect
 from flask_migrate import Migrate
 from flask_cors import CORS
 from dotenv import load_dotenv
@@ -15,7 +13,6 @@ from api.models import db
 
 load_dotenv()
 migrate = Migrate()
-csrf = CSRFProtect()
 
 
 def create_app():
@@ -27,9 +24,6 @@ def create_app():
     # 환경 변수 정의
     env = os.getenv("FLASK_ENV", "default")
     app.config.from_object(config[env])
-
-    csrf.init_app(app)
-    print("INFO: SECRET KEY:", app.config['SECRET_KEY'])
 
     # DATABASE 초기화 및 생성
     db.init_app(app)
