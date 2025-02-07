@@ -9,6 +9,7 @@ class Config:
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16MB
     JSON_AS_ASCII = False
     JSONIFY_PRETTYPRINT_REGULAR = False
+    SECRET_KEY = os.getenv("SECRET_KEY", "default_secret_key")
 
 
 class DevelopmentConfig(Config):

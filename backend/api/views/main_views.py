@@ -36,6 +36,7 @@ def send_audio():
     except Exception as e:
         return jsonify({'error': str(e)}), 400
 
+
 @bp.route('/csrf_token', methods=['GET'])
 def get_csrf_token():
     token = generate_csrf()

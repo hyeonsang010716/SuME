@@ -15,6 +15,7 @@ from api.models import db
 
 load_dotenv()
 migrate = Migrate()
+csrf = CSRFProtect()
 
 
 def create_app():
@@ -27,6 +28,9 @@ def create_app():
     env = os.getenv("FLASK_ENV", "default")
     app.config.from_object(config[env])
 
+    csrf.init_app(app)
+    print("INFO: SECRET KEY:", app.config['SECRET_KEY'])
+
     # DATABASE 초기화 및 생성
     db.init_app(app)
     migrate.init_app(app)
@@ -37,8 +41,8 @@ def create_app():
         db.create_all()
 
     # Blueprint 연결
-    from api.views.main_views import bp
-    app.register_blueprint(bp)
+    from api.views import register_blueprint
+    register_blueprint(app)
 
     return app
 
