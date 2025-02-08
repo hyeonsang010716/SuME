@@ -1,9 +1,6 @@
 import React, { useState } from "react";
-import { getCsrfToken } from "../../csrf"; // CSRF 토큰 가져오는 함수
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
-
-const API_URL = "http://localhost:5000";
 
 const Login = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -20,28 +17,6 @@ const Login = () => {
     if (!id || !password) {
       alert("입력 후 클릭하세요.");
       return;
-    }
-
-    try {
-      const response = await fetch(`${API_URL}/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username: id, password }),
-        credentials: "include", // JWT를 쿠키에 저장하므로 필요
-      });
-
-      if (!response.ok) {
-        throw new Error("로그인 실패");
-      }
-
-      // 로그인 성공 후 CSRF 토큰 요청
-      await getCsrfToken();
-
-      alert("로그인 성공!");
-      window.location.href = "/"; // 홈 화면으로 이동 (또는 다른 페이지)
-    } catch (error) {
-      console.error("Login error:", error);
-      alert("로그인에 실패했습니다.");
     }
   };
 
@@ -94,7 +69,7 @@ const Login = () => {
             onClick={handleLogin}
             disabled={!id || !password}
             className={`px-6 py-2 font-semibold rounded-lg shadow-lg transition-all duration-300 ${
-              id && password ? "bg-pink-300 text-white hover:bg-pink-400" : "bg-gray-300 text-gray-500 cursor-not-allowed"
+              id && password ? "bg-pink-300 text-white hover:bg-pink-400" : "bg-gray-300 text-gray-500"
             }`}
           >
             Login

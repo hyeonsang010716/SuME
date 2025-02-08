@@ -30,6 +30,7 @@ const SumLayout = ({ isStart, isRecording, summation, isLoading, errorMessage })
           overflowX: "hidden"
         }}
       >
+
         <div className="mb-4">
           {isLoading ? (
             <p className="no-wrap mr-2 font-bold text-lg" style={{color:"#6B6B6B"}}>요약 처리 중...</p>
@@ -44,13 +45,6 @@ const SumLayout = ({ isStart, isRecording, summation, isLoading, errorMessage })
                   label="Copy Summation"
                 >
                   <FontAwesomeIcon icon={isCopied ? faCheck : faCopy} size="lg" />
-                  {isCopied && (
-                    <div
-                      className="absolute -top-4 -left-4 h-4 w-16 text-gray-600 text-xs font-extrabold rounded-sm"
-                    >
-                      복사완료!
-                    </div>
-                  )}
                 </button>
               )}
             </div>
