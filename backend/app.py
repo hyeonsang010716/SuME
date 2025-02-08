@@ -18,7 +18,7 @@ migrate = Migrate()
 def create_app():
     app = Flask(__name__)
 
-    CORS(app)
+    CORS(app, origins=["*"])
     logging.basicConfig(level=logging.DEBUG)
 
     # 환경 변수 정의

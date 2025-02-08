@@ -1,23 +1,27 @@
 import { getStoredCsrfToken, getCsrfToken } from "./csrf";
 
+// 로컬
 const API_URL = "http://localhost:5000";
+
+// 서버
+// const API_URL = "http://sume-backend:5000";
 
 getCsrfToken();
 
 const API = {
   uploadAudio: async (formData) => {
     try {
-      const csrfToken = getStoredCsrfToken();
+      // const csrfToken = getStoredCsrfToken();
 
-      if (!csrfToken) {
-        throw new Error("CSRF Token is missing.");
-      }
+      // if (!csrfToken) {
+      //   throw new Error("CSRF Token is missing.");
+      // }
 
       const response = await fetch(`${API_URL}/audio`, {
         method: "POST",
-        headers: {
-          "X-CSRFToken": csrfToken,
-        },
+        // headers: {
+        //   "X-CSRFToken": csrfToken,
+        // },
         body: formData,
       });
 
