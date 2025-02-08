@@ -3,11 +3,10 @@ import Title from "./Title";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
-import "../App.css";
 
 const Header = ( {isMainPage} ) => {
   return (
-    <header id="div1" className={`relative bg-white rounded-none md:rounded-[60px] xl:rounded-3xl  ${isMainPage ? "h-[525px] xl:w-[600px]" : " h-[525px] xl:h-[525px] xl:w-[400px]"} shadow-none md:shadow-xl w-full`}>
+    <header id="div1" className={`relative bg-white rounded-none md:rounded-[60px] xl:rounded-3xl h-[525px] ${isMainPage ? "w-[400px]" : "w-full md:w-[800px] xl:w-[400px]"} shadow-none md:shadow-xl`}>
       <Link
         to="/login"
         className="absolute right-2 md:right-8 top-0 md:top-8 flex items-center justify-center w-10 h-10 rounded-full text-base font-semibold transition-all duration-200 text-gray-500 hover:text-pink-400"

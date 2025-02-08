@@ -13,7 +13,9 @@ const Mainpage = () => {
   const [audioURL, setAudioURL] = useState(null);
   const [recordingStartTime, setRecordingStartTime] = useState(null);
   const [elapsedTime, setElapsedTime] = useState("00:00");
-  const [summation, setSummation] = useState();
+  const [summation, setSummation] = useState(() => {
+    return sessionStorage.getItem("summation") || "";
+  });
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -42,7 +44,6 @@ const Mainpage = () => {
           setIsLoading(true);
           await API.uploadAudio(formData);
           const result = await API.getSummation();
-          console.log('main_page: '+ result)
           setSummation(result);
         } catch (err) {
           console.error(err);
@@ -56,6 +57,7 @@ const Mainpage = () => {
       setMediaRecorder(recorder);
       setRecordingStartTime(Date.now());
       setIsRecording(true);
+      console.log("녹음 시작");
     } catch (error) {
       console.error("Error accessing microphone:", error);
       setErrorMessage("마이크 접근 실패");
@@ -68,6 +70,7 @@ const Mainpage = () => {
       setMediaRecorder(null);
       setRecordingStartTime(null);
       setIsRecording(false);
+      console.log("녹음 종료");
     }
   };
 
@@ -102,7 +105,7 @@ const Mainpage = () => {
       <div className="w-full h-1/4 flex items-center justify-center mt-8 md:mt-0">
         <div
           id="text창"
-          className="flex items-center justify-end p-8 bg-[#F4F4F5] space-x-4 mb-4 w-5/6 h-20 rounded-3xl shadow-xl border-2 border-white text-sm lg:text-base 2xl:text-base"
+          className="flex items-center justify-end p-8 bg-[#F4F4F5] space-x-4 mb-4 w-full md:w-5/6 h-20 rounded-3xl shadow-xl border-2 border-white text-sm lg:text-base 2xl:text-base"
         >
           <RecordedAudio audioURL={audioURL} />
           <div className="flex space-x-4 items-center justify-center">
