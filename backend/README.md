@@ -30,21 +30,23 @@ python app.py
 
 ```
 |- api/
-|  |- __init__.py            # Blueprint를 Flask에 등록 및 설정 초기화
-|  |- main_views.py.         # Route 정의
-|- models/
+|  |- __init__.py                  
+|  |- config.py.                # 기본 환경변수 설정
+|  |- utils.py.                 # 여러 유틸적인 함수
+|  |- views/
+|  |  |- __init__.py            # Blueprint를 Flask에 등록 및 설정 초기화
+|  |  |- main_views.py.         # Route 정의
+|  |- models/                   # DATABASE Model 정의
+|  |  |- __init__.py            
+|  |  |- user.py                
+|  |  |- audio.py  
+|- models/                      # stt 등 AI 관련 코드
 |  |- __init__.py
-|- db_models/
-|  |- __init__.py            # This is an empty file that makes the models package importable as a module.
-|  |- user.py                #
-|  |- audio.py               #
-|
-|- app.py.                   # APP 주요 진입점
-|- db.py.                    #  This file can contain code that sets up the database connection and applies migrations.
-|
-|- database/
-|  |- user.db
-|  |- audio.db
 |
 |- uploads/                  # 오디오 데이터 저장하는 dircetory
+|
+|  |- app.py.                      # APP 주요 진입점
+|
+|- example/                     # unittest
+
 ```

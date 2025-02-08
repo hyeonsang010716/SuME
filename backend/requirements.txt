@@ -5,6 +5,7 @@ sqlalchemy==2.0.37
 flask-sqlalchemy==3.1.1
 flask-migrate==4.1.0
 flask-cors==5.0.0
+flask_wtf==1.2.2
 
 
 cachetools==5.5.0
