@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify
+from flask_jwt_extended import jwt_required, get_jwt_identity
 import logging
 
 from api.models.audio import Audio
@@ -12,7 +13,16 @@ bp = Blueprint('main', __name__)
 bp.logger = logging.getLogger('audio')  # 블루프린트에 로거 추가
 bp.logger.setLevel(logging.INFO)  # 로그 레벨 설정
 
+
+@bp.route("/profile", methods=["GET"])
+@jwt_required()
+def profile():
+    current_user_email = get_jwt_identity()
+    return jsonify({"msg": f"Welcome User {current_user_email}"}), 200
+
+
 @bp.route("/audio", methods=['POST'])
+@jwt_required()
 def upload_audio():
     try:
         audio_file = request.files['audio']
@@ -33,6 +43,7 @@ def upload_audio():
 
 
 @bp.route("/audio", methods=['GET'])
+@jwt_required()
 def send_audio():
     try:
         filename = request.args.get('filename')
