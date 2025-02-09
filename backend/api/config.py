@@ -13,6 +13,7 @@ class Config:
 
 class DevelopmentConfig(Config):
     SQLALCHEMY_DATABASE_URI = "sqlite:///dev.db"
+    JWT_SECRET_KEY="dev_secret_key"
     DEBUG = True
 
 
@@ -21,7 +22,7 @@ class ProductionConfig(Config):
 
 
 config = {
-    "default": ProductionConfig,
+    "default": DevelopmentConfig,
     "production": ProductionConfig,
     "development": DevelopmentConfig,
 }

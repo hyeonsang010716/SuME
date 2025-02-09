@@ -2,9 +2,9 @@ from flask import Flask
 from flask_migrate import Migrate
 from flask_cors import CORS
 from dotenv import load_dotenv
+from flask_jwt_extended import JWTManager
 import logging
 import os
-
 
 from models.stt.google_cloude import rInit_GoogleCloudeSTT
 from api.config import config
@@ -24,6 +24,8 @@ def create_app():
     # 환경 변수 정의
     env = os.getenv("FLASK_ENV", "default")
     app.config.from_object(config[env])
+
+    jwt = JWTManager(app)
 
     # DATABASE 초기화 및 생성
     db.init_app(app)
