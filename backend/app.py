@@ -30,6 +30,7 @@ def create_app():
     migrate.init_app(app)
 
     from api.models.audio import Audio
+    from api.models.user import User
 
     with app.app_context():
         db.create_all()

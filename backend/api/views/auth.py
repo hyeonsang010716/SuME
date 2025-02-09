@@ -24,7 +24,7 @@ def create_user():
         auth_bp.logger.info("Create User Success")
         return jsonify({'message': 'Registration successful.'}), 200
     except ValueError as ve:
-            auth_bp.logger.error(f"Value Error: \n{str(ve)}")
+            auth_bp.logger.error(f"Value Error: {str(ve)}")
             return jsonify({'message': 'Username, email, and password are required fields.'}), 400
     except Exception as e:
         auth_bp.logger.error(f"Unexpected Error: {str(e)}")
