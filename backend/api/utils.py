@@ -7,7 +7,7 @@ def save_audio(file) -> Tuple[str, str]:
     UPLOAD_PATH = 'uploads'
     os.makedirs(UPLOAD_PATH, exist_ok=True)
 
-    filename = f"audio_{datetime.now().strftime("%Y%m%d_%H%M%S")}.wav"
+    filename = "audio_{}.wav".format(datetime.now().strftime("%Y%m%d_%H%M%S"))
     file_path = UPLOAD_PATH+"/"+filename
     file.save(file_path)
 
