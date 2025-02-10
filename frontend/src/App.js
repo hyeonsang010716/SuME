@@ -6,7 +6,6 @@ import Mainpage from "./pages/mainpage/Mainpage";
 import Header from "./pages/Header";
 import Login from "./pages/login/login";
 import Auth from './pages/login/Auth';
-import Calender from './pages/calender/Calender';
 import ProtectedRoute from './ProtectedRoute';
 
 const AppContent = () => {

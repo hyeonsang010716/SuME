@@ -1,21 +1,21 @@
 import React, { useState, useEffect } from "react";
 import Title from "./Title";
+import Calender from "./calender/Calender";
 import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser, faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
+import { faUser, faRightFromBracket, faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 import API from "../API"; // API 가져오기
 
 const Header = ({ isMainPage }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isCalenderOpen, setIsCalenderOpen] = useState(false);
   const navigate = useNavigate();
 
-  // 로그인 상태 확인
   useEffect(() => {
     const tokenValid = API.checkTokenValidity();
     setIsLoggedIn(tokenValid);
   }, [isMainPage]);
 
-  // 로그아웃 처리
   const handleLogout = () => {
     API.logout();
     setIsLoggedIn(false);
@@ -44,44 +44,61 @@ const Header = ({ isMainPage }) => {
         <Title />
       </div>
       
-      {!isLoggedIn ?
+      {!isLoggedIn ? (
+        <div id="mid" className="flex items-center justify-center w-full h-1/6">
+          <Link to="/login" className="w-full h-full flex items-center justify-center">
+            <div className="flex items-center justify-center w-2/3 h-5/6 font-bold rounded-3xl border-2 border-white shadow-xl opacity-50 bg-gray-300 hover:bg-gray-400 transition duration-300">
+              로그인하러 가기
+            </div>
+          </Link>
+        </div>
+      ) : null}
+
       <div id="mid" className="flex items-center justify-center w-full h-1/6">
-        <Link
-          to="/login"
-          className="w-full h-full flex items-center justify-center"
-        >
-          <div
-            className="flex items-center justify-center w-2/3 h-5/6 font-bold rounded-3xl border-2 border-white shadow-xl opacity-50 bg-gray-300 hover:bg-gray-400 transition duration-300"
-          >
-            로그인하러 가기
-          </div>
-        </Link>
-      </div> :
-      <div></div>
-      }
-      <div id="mid" className="flex items-center justify-center w-full h-1/6">
-        <Link
-          to="/note"
-          className="w-full h-full flex items-center justify-center"
-        >
-          <div
-            className="flex items-center justify-center w-2/3 h-5/6 font-bold rounded-3xl border-2 border-white shadow-xl opacity-50 bg-gray-300 hover:bg-gray-400 transition duration-300"
-          >
+        <Link to="/note" className="w-full h-full flex items-center justify-center">
+          <div className="flex items-center justify-center w-2/3 h-5/6 font-bold rounded-3xl border-2 border-white shadow-xl opacity-50 bg-gray-300 hover:bg-gray-400 transition duration-300">
             회의 요약하러 가기
           </div>
         </Link>
       </div>
 
-      {!isLoggedIn ?
-      <div></div> :
-      <div id="mid" className="flex items-center justify-center w-full h-4/6">
-        <div
-          className="flex items-center justify-center w-2/3 h-5/6 font-bold rounded-3xl border-2 border-white shadow-xl opacity-50 bg-gray-300 hover:bg-gray-400 transition duration-300"
-        >
-          캘린더
+      {isLoggedIn && (
+        <div id="mid" className="flex items-center justify-center w-full h-1/2">
+          <button
+            onClick={() => {
+              setIsCalenderOpen(true);
+              document.body.classList.add("overflow-hidden"); // 모달 열릴 때 스크롤 방지
+            }}
+            className="flex items-center justify-center w-2/3 h-5/6 font-bold rounded-3xl border-2 border-white shadow-xl opacity-50 bg-gray-300 hover:bg-gray-400 transition duration-300"
+          >
+            <FontAwesomeIcon icon={faCalendarAlt} className="mr-2" />
+            캘린더 보기
+          </button>
         </div>
-      </div>
-      }
+      )}
+
+      {/* 캘린더 모달 */}
+      {isCalenderOpen && (
+        <div
+          className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-[9999]"
+        >
+          <div className="bg-white p-6 rounded-lg shadow-2xl w-4/5 md:w-1/2 relative">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-bold">캘린더</h2>
+              <button
+                className="text-red-500 font-bold text-lg"
+                onClick={() => {
+                  setIsCalenderOpen(false);
+                  document.body.classList.remove("overflow-hidden"); // 모달 닫힐 때 스크롤 복구
+                }}
+              >
+                ✖
+              </button>
+            </div>
+            <Calender />
+          </div>
+        </div>
+      )}
     </header>
   );
 };
