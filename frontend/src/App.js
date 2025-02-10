@@ -29,6 +29,9 @@ const AppContent = () => {
     <div
       className={`flex flex-col xl:flex-row h-screen w-full ${isMainPage ? "h-full xl:h-screen" : "gap-10"} justify-center items-center p-0 bg-white md:bg-cyan-100`}
     >
+    <div
+      className={`flex flex-col xl:flex-row h-screen w-full ${isMainPage ? "h-full xl:h-screen" : "gap-10"} justify-center items-center p-0 bg-white md:bg-cyan-100`}
+    >
       
       <motion.div
         id="div1"
@@ -62,17 +65,7 @@ const AppContent = () => {
           </Routes>
         </motion.div>
       )}
-      
-      {!isMainPage && (
-        <motion.div
-          id="div3"
-          innitial={{ opacity: 0, x: isxl ? 0: 100, y:0 }}
-          animate={{ opacity: 1, x: isxl ? 0 : 0, y: isxl ? (isMdScreen ? 160 : 200) : 0 }}
-          className="h-[700px] w-full xl:w-[400px] flex items-center justify-center xl:justify-start"
-        >
-          <Calender />
-        </motion.div>
-      )}
+    </div>
     </div>
   );
 };

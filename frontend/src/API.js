@@ -36,6 +36,7 @@ const API = {
   getSummation: async () => {
     try {
       console.log("Get Summation");
+      console.log("Get Summation");
       const filename = localStorage.getItem("audio_filename");
       const filePath = localStorage.getItem("audio_file_path");
 
@@ -59,6 +60,8 @@ const API = {
       }
 
       const data = await response.json();
+      console.log(data);
+      console.log("Get Summation done");
       console.log(data);
       console.log("Get Summation done");
       return data.message;
