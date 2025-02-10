@@ -60,7 +60,7 @@ const Auth = () => {
 
   return (
     <div className="flex flex-col items-center h-[600px] w-[800px] bg-white shadow-md p-8 pt-4 rounded-xl">
-      <div className="text-2xl font-bold text-center text-gray-600">Sign Up</div>
+      <div className="text-2xl font-bold text-center text-gray-600">Join</div>
 
       <div className="w-5/6 h-full bg-gray-100 rounded-2xl p-10 shadow-xl flex flex-col items-center justify-center mt-4 gap-6">
         {/* 이름 입력 */}
@@ -117,7 +117,7 @@ const Auth = () => {
         {/* 비밀번호 확인 입력 */}
         <div className="flex flex-col w-5/6">
           <label htmlFor="confirm-password-input" className="text-sm font-semibold text-gray-500 mb-2">
-            Confirm Password
+            Password 재입력
           </label>
           <input
             id="confirm-password-input"

@@ -4,7 +4,6 @@ import API from "./API";
 
 const ProtectedRoute = ({ children }) => {
   const isAuthenticated = API.checkTokenValidity();
-
   return isAuthenticated ? children : <Navigate to="/login" replace />;
 };
 

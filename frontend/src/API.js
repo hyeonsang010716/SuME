@@ -8,13 +8,14 @@ const API = {
   // Upload Audio
   uploadAudio: async (formData) => {
     try {
-      console.log("Upload Audio");
+      console.log("Audio 업로드 중");
       const response = await fetch(`${API_URL}/audio`, {
         method: "POST",
         body: formData,
       });
 
       if (!response.ok) {
+        console.log("연결 실패");
         throw new Error("File upload failed. response failed.");
       }
 
@@ -23,7 +24,7 @@ const API = {
       // filename과 file_path 저장
       localStorage.setItem("audio_filename", data.filename);
       localStorage.setItem("audio_file_path", data.file_path);
-      console.log("Upload Audio 및 파일명 저장 완료");
+      console.log("Audio 업로드 및 파일명 저장 완료");
       return data;
     } catch (error) {
       console.error("Error uploading file:", error);
@@ -53,7 +54,8 @@ const API = {
       );
 
       if (!response.ok) {
-        throw new Error("Failed to fetch Summation. response not ok.");
+        console.log("연결 실패");
+        throw new Error("Failed to fetch Summation.");
       }
 
       const data = await response.json();
@@ -123,7 +125,7 @@ const API = {
       localStorage.setItem("token", data.access_token);
       localStorage.setItem("token_exp", expirationTime.toString());
 
-      console.log("로그인 성공! JWT 저장 완료:", data.access_token);
+      console.log("로그인 성공! JWT 저장 완료");
       return data;
     } catch (error) {
       console.error("로그인 에러:", error.message);
@@ -168,13 +170,13 @@ const API = {
     const token = localStorage.getItem("token");
     const tokenExp = localStorage.getItem("token_exp");
     if (!token || !tokenExp) {
-      console.log("토큰 없음. 로그아웃 상태 유지.");
+      console.log("토큰 없음. 로그아웃 상태 유지");
       return false;
     }
 
     const currentTime = Date.now();
     if (currentTime > parseInt(tokenExp, 10)) {
-      console.log("토큰 만료됨. 자동 로그아웃 진행.");
+      console.log("토큰 만료됨. 자동 로그아웃 진행");
       API.logout();
       return false;
     }

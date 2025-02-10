@@ -17,8 +17,11 @@ const Login = () => {
 
   // 로그인 처리
   const handleLogin = async () => {
-    if (!id || !password) {
-      alert("입력 후 클릭하세요.");
+    if (!id) {
+      alert("이메일을 입력하세요.");
+      return;
+    } else if (!password) {
+      alert("비밀번호를 입력하세요.");
       return;
     }
 
@@ -28,7 +31,7 @@ const Login = () => {
       await API.login(id, password);
       navigate("/");
     } catch (error) {
-      alert("로그인 실패: ", error.message);
+      alert("이메일 혹은 비밀번호가 일치하지 않습니다.");
     }
   };
 
@@ -85,9 +88,9 @@ const Login = () => {
           </button>
           <Link
             to="/Auth"
-            className="flex items-center justify-center w-28 py-2 ml-4 font-semibold rounded-lg shadow-lg transition-all duration-300 bg-green-300 hover:bg-green-500 text-gray-500 hover:text-white"
+            className="flex items-center justify-center w-28 py-2 ml-4 font-semibold rounded-lg shadow-lg transition-all duration-300 bg-white border-2 hover:bg-green-300 text-gray-500 hover:text-white hover:border-green-300"
           >
-            회원가입
+            Join
           </Link>
         </div>
       </div>

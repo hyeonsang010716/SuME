@@ -13,7 +13,7 @@ const Header = ({ isMainPage }) => {
   useEffect(() => {
     const tokenValid = API.checkTokenValidity();
     setIsLoggedIn(tokenValid);
-  }, []);
+  }, [isMainPage]);
 
   // 로그아웃 처리
   const handleLogout = () => {
@@ -44,6 +44,7 @@ const Header = ({ isMainPage }) => {
         <Title />
       </div>
       
+      {!isLoggedIn ?
       <div id="mid" className="flex items-center justify-center w-full h-1/6">
         <Link
           to="/login"
@@ -55,7 +56,9 @@ const Header = ({ isMainPage }) => {
             로그인하러 가기
           </div>
         </Link>
-      </div>
+      </div> :
+      <div></div>
+      }
       <div id="mid" className="flex items-center justify-center w-full h-1/6">
         <Link
           to="/note"
@@ -68,6 +71,17 @@ const Header = ({ isMainPage }) => {
           </div>
         </Link>
       </div>
+
+      {!isLoggedIn ?
+      <div></div> :
+      <div id="mid" className="flex items-center justify-center w-full h-4/6">
+        <div
+          className="flex items-center justify-center w-2/3 h-5/6 font-bold rounded-3xl border-2 border-white shadow-xl opacity-50 bg-gray-300 hover:bg-gray-400 transition duration-300"
+        >
+          캘린더
+        </div>
+      </div>
+      }
     </header>
   );
 };
