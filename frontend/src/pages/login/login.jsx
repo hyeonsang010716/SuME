@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { useNavigate, Link } from "react-router-dom";
+import API from "../../API";
 
 const Login = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   // 비밀번호 보이기/숨기기 토글
   const togglePasswordVisibility = () => {
@@ -18,6 +21,15 @@ const Login = () => {
       alert("입력 후 클릭하세요.");
       return;
     }
+
+    console.log("login 버튼 클릭");
+
+    try {
+      await API.login(id, password);
+      navigate("/");
+    } catch (error) {
+      alert("로그인 실패: ", error.message);
+    }
   };
 
   return (
@@ -28,12 +40,12 @@ const Login = () => {
         {/* ID 입력 */}
         <div className="flex flex-col w-5/6">
           <label htmlFor="id-input" className="text-sm font-semibold text-gray-500 mb-2">
-            ID
+            Email
           </label>
           <input
             id="id-input"
             type="text"
-            placeholder="Enter your ID"
+            placeholder="Enter your Email"
             value={id}
             onChange={(e) => setId(e.target.value)}
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-400"
@@ -67,13 +79,16 @@ const Login = () => {
         <div className="w-full mt-10 flex items-center justify-center">
           <button
             onClick={handleLogin}
-            disabled={!id || !password}
-            className={`px-6 py-2 font-semibold rounded-lg shadow-lg transition-all duration-300 ${
-              id && password ? "bg-pink-300 text-white hover:bg-pink-400" : "bg-gray-300 text-gray-500"
-            }`}
+            className="w-28 py-2 font-semibold rounded-lg shadow-lg transition-all duration-300 mr-4 bg-pink-300 text-white hover:bg-pink-400"
           >
             Login
           </button>
+          <Link
+            to="/Auth"
+            className="flex items-center justify-center w-28 py-2 ml-4 font-semibold rounded-lg shadow-lg transition-all duration-300 bg-green-300 hover:bg-green-500 text-gray-500 hover:text-white"
+          >
+            회원가입
+          </Link>
         </div>
       </div>
     </div>

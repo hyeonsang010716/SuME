@@ -5,7 +5,9 @@ import './App.css';
 import Mainpage from "./pages/mainpage/Mainpage";
 import Header from "./pages/Header";
 import Login from "./pages/login/login";
+import Auth from './pages/login/Auth';
 import Calender from './pages/calender/Calender';
+import ProtectedRoute from './ProtectedRoute';
 
 const AppContent = () => {
   const location = useLocation();
@@ -47,8 +49,16 @@ const AppContent = () => {
           className="h-[700px] w-full xl:w-[800px] flex items-center justify-center xl:justify-start"
         >
           <Routes>
-            <Route path="/note" element={<Mainpage />} />
+            <Route
+              path="/note"
+              element={
+                <ProtectedRoute>
+                  <Mainpage />
+                </ProtectedRoute>
+              } 
+            />
             <Route path="/login" element={<Login />} />
+            <Route path="/auth" element={<Auth />} />
           </Routes>
         </motion.div>
       )}

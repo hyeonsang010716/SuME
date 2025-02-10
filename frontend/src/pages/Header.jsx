@@ -1,18 +1,44 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Title from "./Title";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser } from "@fortawesome/free-solid-svg-icons";
+import { faUser, faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
+import API from "../API"; // API 가져오기
 
-const Header = ( {isMainPage} ) => {
+const Header = ({ isMainPage }) => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate();
+
+  // 로그인 상태 확인
+  useEffect(() => {
+    const tokenValid = API.checkTokenValidity();
+    setIsLoggedIn(tokenValid);
+  }, []);
+
+  // 로그아웃 처리
+  const handleLogout = () => {
+    API.logout();
+    setIsLoggedIn(false);
+    navigate("/");
+  };
+
   return (
     <header id="div1" className={`relative bg-white rounded-none md:rounded-[60px] xl:rounded-3xl h-[525px] ${isMainPage ? "w-[400px]" : "w-full md:w-[800px] xl:w-[400px]"} shadow-none md:shadow-xl`}>
-      <Link
-        to="/login"
-        className="absolute right-2 md:right-8 top-0 md:top-8 flex items-center justify-center w-10 h-10 rounded-full text-base font-semibold transition-all duration-200 text-gray-500 hover:text-pink-400"
-      >
-        <FontAwesomeIcon icon={faUser} size="xl" />
-      </Link>
+      {isLoggedIn ? (
+        <button
+          onClick={handleLogout}
+          className="absolute right-2 md:right-8 top-0 md:top-8 flex items-center justify-center w-10 h-10 rounded-full text-base font-semibold transition-all duration-200 text-gray-500 hover:text-pink-400"
+        >
+          <FontAwesomeIcon icon={faRightFromBracket} size="xl" />
+        </button>
+      ) : (
+        <Link
+          to="/login"
+          className="absolute right-2 md:right-8 top-0 md:top-8 flex items-center justify-center w-10 h-10 rounded-full text-base font-semibold transition-all duration-200 text-gray-500 hover:text-pink-400"
+        >
+          <FontAwesomeIcon icon={faUser} size="xl" />
+        </Link>
+      )}
 
       <div id="title" className="flex items-center justify-center w-full h-1/6">
         <Title />
@@ -42,15 +68,6 @@ const Header = ( {isMainPage} ) => {
           </div>
         </Link>
       </div>
-      {/*
-      <div id="main" className="flex items-center justify-center w-full h-2/3">
-        <div
-          className="w-2/3 h-5/6 rounded-3xl border-2 border-white shadow-xl opacity-50"
-          style={{background:"#D9D9D9"}}
-        >
-        </div>
-      </div>
-      */}
     </header>
   );
 };
