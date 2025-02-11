@@ -15,7 +15,7 @@ function Calender(){
     },
     {
       title: '222',
-      start: format(new Date(), 'yyyy-MM-dd'),
+      start: '2025-02-01',
       end: '2025-02-20',
       description: '2오늘의 일정입니다.',
     },
@@ -120,12 +120,12 @@ function Calender(){
         <div className="overflow-y-auto h-[calc(100%-3rem)]">
           {events
             .filter(event => {
-              const dueDate = new Date(event.start);
+              const dueDate = new Date(event.end);
               const today = new Date();
               const diffDays = Math.ceil((dueDate - today) / (1000 * 60 * 60 * 24));
-              return diffDays >= 0 && diffDays <= 7; // 7일 이내의 일정만 표시
+              return diffDays >= 0; // 7일 이내의 일정만 표시
             })
-            .sort((a, b) => new Date(a.start) - new Date(b.start))
+            .sort((a, b) => new Date(a.end) - new Date(b.end))
             .map(event => (
               <div key={event.id} className="mb-4 p-3 bg-gray-50 rounded-lg">
                 <div className="text-sm font-semibold">{event.title}</div>
