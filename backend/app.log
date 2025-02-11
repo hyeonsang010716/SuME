@@ -1,0 +1,4 @@
+2025-02-12 00:10:54,637 - __main__ - INFO - Flask Application Starting...
+2025-02-12 00:10:54,649 - main - INFO - Main Blueprint Logger Initialized
+2025-02-12 00:10:54,685 - werkzeug - WARNING -  * Debugger is active!
+2025-02-12 00:10:54,686 - werkzeug - INFO -  * Debugger PIN: 583-528-092
