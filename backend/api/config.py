@@ -6,9 +6,10 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     TEST = False
     DEBUG = False
-    MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16MB
+    MAX_CONTENT_LENGTH = 32 * 1024 * 1024
     JSON_AS_ASCII = False
     JSONIFY_PRETTYPRINT_REGULAR = False
+    USE_RELOADER=False
 
 
 class DevelopmentConfig(Config):
