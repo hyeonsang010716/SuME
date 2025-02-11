@@ -194,6 +194,28 @@ const API = {
     localStorage.removeItem("token");
     console.log("로그아웃 완료");
   },
+
+  // 이벤트(일정) 받아아오기
+  getEvents: async () => {
+    try {
+      const response = await fetch(`${API_URL}/auth/events`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("이벤트 받아오기 실패");
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("이벤트 받아오기 에러:", error.message);
+      throw error;
+    }
+  },
 };
 
 export default API;
