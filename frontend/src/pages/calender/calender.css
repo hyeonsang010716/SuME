@@ -1,11 +1,11 @@
-.fc-scroller {
+/* .fc-scroller {
     overflow: hidden !important;
   }
   
   .fc-daygrid-body {
     height: auto !important;
   }
-  
+   */
 .fc-theme-standard td, 
 .fc-theme-standard th {
   border: none !important;  /* ✅ 달력 셀 테두리 제거 */
