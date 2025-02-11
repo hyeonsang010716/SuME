@@ -1,2 +1,6 @@
  * Debugger is active!
  * Debugger PIN: 583-528-092
+127.0.0.1 - - [12/Feb/2025 00:36:31] "[31m[1mGET /profile HTTP/1.1[0m" 401 -
+127.0.0.1 - - [12/Feb/2025 00:36:31] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+127.0.0.1 - - [12/Feb/2025 00:40:50] "[31m[1mGET /profile HTTP/1.1[0m" 401 -
+127.0.0.1 - - [12/Feb/2025 00:41:13] "[31m[1mGET /profile HTTP/1.1[0m" 401 -

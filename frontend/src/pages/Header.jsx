@@ -67,10 +67,10 @@ const Header = ({ isMainPage }) => {
       {isLoggedIn && (
         <div id="mid" className="flex items-center justify-center w-full h-2/3">
           <button
-            //onClick={() => {
-            //  setIsCalenderOpen(true);
-            //  document.body.classList.add("overflow-hidden"); // 모달 열릴 때 스크롤 방지
-            //}}
+            onClick={() => {
+              setIsCalenderOpen(true);
+              document.body.classList.add("overflow-hidden"); // 모달 열릴 때 스크롤 방지
+            }}
             className="w-2/3 h-5/6 rounded-xl font-bold shadow-xl opacity-50 bg-gray-100 border-2 border-white hover:bg-gray-300 transition duration-300"
           >
             <CalenderSummary />

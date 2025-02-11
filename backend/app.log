@@ -2,3 +2,7 @@
 2025-02-12 00:10:54,649 - main - INFO - Main Blueprint Logger Initialized
 2025-02-12 00:10:54,685 - werkzeug - WARNING -  * Debugger is active!
 2025-02-12 00:10:54,686 - werkzeug - INFO -  * Debugger PIN: 583-528-092
+2025-02-12 00:36:31,069 - werkzeug - INFO - 127.0.0.1 - - [12/Feb/2025 00:36:31] "[31m[1mGET /profile HTTP/1.1[0m" 401 -
+2025-02-12 00:36:31,113 - werkzeug - INFO - 127.0.0.1 - - [12/Feb/2025 00:36:31] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-02-12 00:40:50,936 - werkzeug - INFO - 127.0.0.1 - - [12/Feb/2025 00:40:50] "[31m[1mGET /profile HTTP/1.1[0m" 401 -
+2025-02-12 00:41:13,836 - werkzeug - INFO - 127.0.0.1 - - [12/Feb/2025 00:41:13] "[31m[1mGET /profile HTTP/1.1[0m" 401 -
