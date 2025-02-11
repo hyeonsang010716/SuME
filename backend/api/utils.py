@@ -1,6 +1,14 @@
 from datetime import datetime
 from typing import Tuple
+import logging
 import os
+
+logger = logging.getLogger("utils")
+logger.setLevel(logging.DEBUG)
+
+file_handler = logging.FileHandler("utils.log")
+file_handler.setFormatter(logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s"))
+logger.addHandler(file_handler)
 
 
 def save_audio(file) -> Tuple[str, str]:

@@ -6,9 +6,14 @@ import logging
 
 auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
 
-# 로거 설정
-auth_bp.logger = logging.getLogger('auth')  # 블루프린트에 로거 추가
-auth_bp.logger.setLevel(logging.INFO)  # 로그 레벨 설정
+auth_bp.logger = logging.getLogger('auth')
+auth_bp.logger.setLevel(logging.DEBUG)
+
+# 콘솔 출력 핸들러 추가
+if not auth_bp.logger.handlers:
+    handler = logging.StreamHandler()
+    handler.setFormatter(logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s"))
+    auth_bp.logger.addHandler(handler)
 
 @auth_bp.route('/register', methods=['POST'])
 def register_user():
@@ -38,6 +43,7 @@ def register_user():
 @auth_bp.route('/login', methods=['POST'])
 def login():
     try:
+        print('시발')
         auth_bp.logger.info("Register: Start")
         data = request.get_json()
         if not data or 'email' not in data or 'password' not in data:
