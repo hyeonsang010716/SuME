@@ -2,9 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
-html{
-  background-color: #cffafe;
+html {
+  background: linear-gradient(to right, #cffafe, #A1E3F9);
 }
+
 
 body {
   margin: 0;

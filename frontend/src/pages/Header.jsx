@@ -1,33 +1,35 @@
 import React, { useState, useEffect } from "react";
 import Title from "./Title";
 import Calender from "./calender/Calender";
+import CalenderSummary from "./calender/CalenderSummary";
 import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser, faRightFromBracket, faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
+import { faUser, faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import API from "../API"; // API 가져오기
 
 const Header = ({ isMainPage }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  //const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [isCalenderOpen, setIsCalenderOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     const tokenValid = API.checkTokenValidity();
-    setIsLoggedIn(tokenValid);
+    //setIsLoggedIn(tokenValid);
   }, [isMainPage]);
 
   const handleLogout = () => {
     API.logout();
-    setIsLoggedIn(false);
+    //setIsLoggedIn(false);
     navigate("/");
   };
 
   return (
-    <header id="div1" className={`relative bg-white rounded-none md:rounded-[60px] xl:rounded-3xl h-[525px] ${isMainPage ? "w-[400px]" : "w-full md:w-[800px] xl:w-[400px]"} shadow-none md:shadow-xl`}>
+    <header id="div1" className={`relative bg-white rounded-none md:rounded-t-[30px] xl:rounded-[30px] xl:rounded-3xl h-[525px] ${isMainPage ? "w-[400px]" : "w-full md:w-[800px] xl:w-[400px]"} shadow-none md:shadow-xl`}>
       {isLoggedIn ? (
         <button
           onClick={handleLogout}
-          className="absolute right-2 md:right-8 top-0 md:top-8 flex items-center justify-center w-10 h-10 rounded-full text-base font-semibold transition-all duration-200 text-gray-500 hover:text-pink-400"
+          className="absolute right-2 md:right-8 top-4 md:top-8 flex items-center justify-center w-10 h-10 rounded-full text-base font-semibold transition-all duration-200 text-gray-500 hover:text-pink-400"
         >
           <FontAwesomeIcon icon={faRightFromBracket} size="xl" />
         </button>
@@ -63,16 +65,15 @@ const Header = ({ isMainPage }) => {
       </div>
 
       {isLoggedIn && (
-        <div id="mid" className="flex items-center justify-center w-full h-1/2">
+        <div id="mid" className="flex items-center justify-center w-full h-2/3">
           <button
             onClick={() => {
               setIsCalenderOpen(true);
               document.body.classList.add("overflow-hidden"); // 모달 열릴 때 스크롤 방지
             }}
-            className="flex items-center justify-center w-2/3 h-5/6 font-bold rounded-3xl border-2 border-white shadow-xl opacity-50 bg-gray-300 hover:bg-gray-400 transition duration-300"
+            className="w-2/3 h-5/6 rounded-xl font-bold shadow-xl opacity-50 bg-gray-100 border-2 border-white hover:bg-gray-300 transition duration-300"
           >
-            <FontAwesomeIcon icon={faCalendarAlt} className="mr-2" />
-            캘린더 보기
+            <CalenderSummary />
           </button>
         </div>
       )}
