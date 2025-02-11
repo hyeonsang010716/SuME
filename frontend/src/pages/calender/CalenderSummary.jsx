@@ -1,10 +1,25 @@
-import { React } from 'react';
+import { React, useState, useEffect } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import './calender.css';
+import './calenderSummary.css';
 
 function CalenderSummary(){
+  const [events, setEvents] = useState([]);
+  
+  useEffect(() => {
+    fetch("/data.json")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("failed to fetch data");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setEvents(data);
+      })
+      .catch((error) => console.error("Error loading events:", error));
+  }, []);
 
   return(
     <div className="w-full h-full p-0">
@@ -16,8 +31,10 @@ function CalenderSummary(){
         initialView="dayGridMonth"
         headerToolbar={false}
         dayHeaders={false}
-        height="90%"
+        height="80%"
         width="100%"
+        events={events}
+        eventDisplay="auto"
       />
     </div>
   )

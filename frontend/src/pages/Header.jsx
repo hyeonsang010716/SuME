@@ -8,13 +8,14 @@ import { faUser, faRightFromBracket } from "@fortawesome/free-solid-svg-icons";
 import API from "../API"; // API 가져오기
 
 const Header = ({ isMainPage }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  //const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [isCalenderOpen, setIsCalenderOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     const tokenValid = API.checkTokenValidity();
-    setIsLoggedIn(tokenValid);
+    //setIsLoggedIn(tokenValid);
   }, [isMainPage]);
 
   const handleLogout = () => {
