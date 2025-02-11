@@ -43,7 +43,10 @@ const Mainpage = () => {
         try {
           setIsLoading(true);
           await API.uploadAudio(formData);
-          const result = await API.getSummation();
+          let result = await API.getSummation();
+          if (!result){
+            result = "인식된 음성이 존재하지 않습니다."
+          }
           setSummation(result);
         } catch (err) {
           console.error(err);

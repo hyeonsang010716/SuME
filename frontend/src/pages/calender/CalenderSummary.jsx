@@ -1,9 +1,11 @@
+import { React } from 'react';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import './calender.css';
 
 function CalenderSummary(){
+
   return(
     <div className="w-full h-full p-0">
       <h1 className="mb-4 text-xl">

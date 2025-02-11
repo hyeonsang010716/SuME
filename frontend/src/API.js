@@ -9,8 +9,12 @@ const API = {
   uploadAudio: async (formData) => {
     try {
       console.log("Audio 업로드 중");
+      const token = localStorage.getItem("token");
       const response = await fetch(`${API_URL}/audio`, {
         method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
         body: formData,
       });
 
@@ -24,7 +28,7 @@ const API = {
       // filename과 file_path 저장
       localStorage.setItem("audio_filename", data.filename);
       localStorage.setItem("audio_file_path", data.file_path);
-      console.log("Audio 업로드 및 파일명 저장 완료");
+      console.log("Audio 업로드 완료");
       return data;
     } catch (error) {
       console.error("Error uploading file:", error);
@@ -35,8 +39,8 @@ const API = {
   // Get Summation
   getSummation: async () => {
     try {
-      console.log("Get Summation");
-      console.log("Get Summation");
+      console.log("Summation 요청");
+      const token = localStorage.getItem("token");
       const filename = localStorage.getItem("audio_filename");
       const filePath = localStorage.getItem("audio_file_path");
 
@@ -49,6 +53,7 @@ const API = {
         {
           method: "GET",
           headers: {
+            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
         }
@@ -60,10 +65,7 @@ const API = {
       }
 
       const data = await response.json();
-      console.log(data);
-      console.log("Get Summation done");
-      console.log(data);
-      console.log("Get Summation done");
+      console.log("Summation 요청 완료", data);
       return data.message;
       
     } catch (error) {
