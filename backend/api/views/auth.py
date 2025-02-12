@@ -19,8 +19,8 @@ if not auth_bp.logger.handlers:
 @auth_bp.route("/profile", methods=["GET"])
 @jwt_required()
 def profile():
-    current_user_email = get_jwt_identity()
-    return jsonify({"msg": f"Welcome User {current_user_email}"}), 200
+    current_user_id = get_jwt_identity()
+    return jsonify({"msg": "Welcome", 'user_id': current_user_id}), 200
 
 @auth_bp.route('/register', methods=['POST'])
 def register_user():
@@ -49,7 +49,6 @@ def register_user():
 @auth_bp.route('/login', methods=['POST'])
 def login():
     try:
-        print('시발')
         auth_bp.logger.info("Register: Start")
         data = request.get_json()
         if not data or 'email' not in data or 'password' not in data:
@@ -65,7 +64,7 @@ def login():
             return jsonify({'message': 'wrong password'}), 400
         
     
-        access_token = create_access_token(identity=user.email)
+        access_token = create_access_token(identity=str(user.id))
         return jsonify(access_token=access_token), 200
     except ValueError as ve:
             auth_bp.logger.error(f"Value Error: {str(ve)}")

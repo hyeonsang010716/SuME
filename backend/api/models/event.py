@@ -1,4 +1,5 @@
 from api.models import db
+from sqlalchemy import and_
 from datetime import datetime
 
 
@@ -9,8 +10,6 @@ class Event(db.Model):
     start_time = db.Column(db.DateTime, nullable=False)
     end_time = db.Column(db.DateTime, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-
-    user = db.relationship('User', backref=db.backref('events', lazy=True))
 
 
     @classmethod
@@ -32,12 +31,16 @@ class Event(db.Model):
         return new_event
     
     @classmethod
+    def get_event_by_id(cls, id):
+        return cls.query.filter_by(id=id).first()
+
+    @classmethod
     def get_event_by_title(cls, title):
         return cls.query.filter_by(title=title).first()
     
     @classmethod
     def get_user_events(cls, user_id, start_date, end_date):
-        cls.query.filter(
+        return cls.query.filter(
             and_(
                 cls.user_id == user_id,
                 cls.start_time >= start_date,
@@ -46,10 +49,10 @@ class Event(db.Model):
         ).all()
 
     @classmethod
-    def delete(cls, title):
-        target_event = cls.query.filter_by(title=title).first()
+    def delete(cls, id):
+        target_event = cls.query.filter_by(id=id).first()
         if not target_event:
-            raise ValueError(f'Not found {title} Event')
+            raise ValueError(f'Not found {id} Event')
         db.session.delete(target_event)
         db.session.commit()
 
