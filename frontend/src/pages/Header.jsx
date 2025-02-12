@@ -85,7 +85,7 @@ const Header = ({ isMainPage }) => {
         >
           <div className="bg-white p-6 rounded-lg shadow-2xl w-4/5 md:w-1/2 relative">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold">캘린더</h2>
+              <h2 className="text-xl font-bold opacity-60">캘린더</h2>
               <button
                 className="text-red-500 font-bold text-lg"
                 onClick={() => {

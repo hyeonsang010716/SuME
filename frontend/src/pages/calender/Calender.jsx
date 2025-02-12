@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { format } from 'date-fns';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
-
+import './calender.css';
 import API from '../../API';
 
 function Calender(){
@@ -59,8 +59,8 @@ function Calender(){
   };
 
   return(
-    <div className="flex justify-center gap-6">
-      <div className="flex flex-col items-center h-[525px] bg-white shadow-none md:shadow-xl rounded-none md:rounded-[60px] pt-4 w-full md:w-[800px] xl:w-[400px]">
+    <div className="flex justify-center gap-6 opacity-70">
+      <div className="flex flex-col items-center h-[525px] bg-white shadow-none md:shadow-xl rounded-none pt-4 w-full md:w-[800px] xl:w-[400px]">
         <div className="calendar-wrapper h-full w-full px-4">
           <FullCalendar
             plugins={[dayGridPlugin]} // 월간 보기 플러그인 추가
@@ -82,7 +82,6 @@ function Calender(){
             }}
             dayHeaderClassNames="py-1 text-sm"
             titleClassNames="text-lg font-bold w-[180px] text-center mx-auto"
-            buttonClassNames="px-3 py-1"
             headerClassNames="flex items-center justify-between mb-2 h-[40px]"
             dayCellClassNames="text-sm"
           />
@@ -115,7 +114,7 @@ function Calender(){
       </div>
 
       {/* 마감 일정 리스트 */}
-      <div className="hidden xl:block w-[300px] h-[525px] bg-white shadow-xl rounded-[60px] p-6">
+      <div className="hidden xl:block w-[300px] h-[525px] bg-white shadow-xl p-6">
         <h2 className="text-xl font-bold mb-4">다가오는 일정</h2>
         <div className="overflow-y-auto h-[calc(100%-3rem)]">
           {events
@@ -127,9 +126,9 @@ function Calender(){
             })
             .sort((a, b) => new Date(a.end) - new Date(b.end))
             .map(event => (
-              <div key={event.id} className="mb-4 p-3 bg-gray-50 rounded-lg">
-                <div className="text-sm font-semibold">{event.title}</div>
-                <div className="text-xs text-gray-500">
+              <div key={event.id} className="mb-4 p-3 bg-gray-50 border-t-2">
+                <div className="text-sm font-bold">{event.title}</div>
+                <div className="text-xs text-gray-500 font-bold">
                   {new Date(event.end).toLocaleDateString('ko-KR', {
                     month: 'long',
                     day: 'numeric',

@@ -1,8 +1,18 @@
+.fc-scrollgrid {
+    border: none !important; /* ✅ 전체 달력 테두리 제거 */
+  }
+
+  .fc-scroller {
+    overflow: hidden !important;
+  }
+  
+  .fc-daygrid-body {
+    height: auto !important;
+  }
+  
+
 .fc-theme-standard td, 
 .fc-theme-standard th {
   border: none !important;  /* ✅ 달력 셀 테두리 제거 */
 }
 
-.fc-scrollgrid {
-    border: none !important; /* ✅ 전체 달력 테두리 제거 */
-  }
