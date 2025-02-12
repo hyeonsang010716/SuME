@@ -49,6 +49,7 @@ def create_app():
 
     from api.models.audio import Audio
     from api.models.user import User
+    from api.models.event import Event
 
     with app.app_context():
         db.create_all()

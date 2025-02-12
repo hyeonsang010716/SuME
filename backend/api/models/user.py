@@ -11,6 +11,8 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)  
     password_hash = db.Column(db.String(256), nullable=False)  
 
+    events = db.relationship('Event', backref='user', lazy=True, cascade="all, delete-orphan")
+
 
     def __repr__(self):
         return f"<User {self.name}>"
