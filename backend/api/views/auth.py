@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, get_jwt_identity, jwt_required
 from api.models.user import User
 import logging
 
@@ -14,6 +14,13 @@ if not auth_bp.logger.handlers:
     handler = logging.StreamHandler()
     handler.setFormatter(logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s"))
     auth_bp.logger.addHandler(handler)
+
+
+@auth_bp.route("/profile", methods=["GET"])
+@jwt_required()
+def profile():
+    current_user_email = get_jwt_identity()
+    return jsonify({"msg": f"Welcome User {current_user_email}"}), 200
 
 @auth_bp.route('/register', methods=['POST'])
 def register_user():
@@ -38,7 +45,6 @@ def register_user():
     except Exception as e:
         auth_bp.logger.error(f"Unexpected Error: {str(e)}")
         return jsonify({'message': 'Registration failed due to an unexpected error.'}), 500
-
 
 @auth_bp.route('/login', methods=['POST'])
 def login():
