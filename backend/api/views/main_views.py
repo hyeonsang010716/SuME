@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify
+from flask_jwt_extended import jwt_required, get_jwt_identity
 import logging
 
 from api.models.audio import Audio
@@ -9,10 +10,27 @@ from models.stt.google_cloude import rCall_RunSTT
 bp = Blueprint('main', __name__)
 
 # 로거 설정
-bp.logger = logging.getLogger('audio')  # 블루프린트에 로거 추가
-bp.logger.setLevel(logging.INFO)  # 로그 레벨 설정
+bp.logger = logging.getLogger('main')  # 블루프린트에 로거 추가
+bp.logger.setLevel(logging.DEBUG)  # 로그 레벨 설정
+
+# 콘솔 출력 핸들러 추가
+if not bp.logger.handlers:
+    handler = logging.StreamHandler()
+    handler.setFormatter(logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s"))
+    bp.logger.addHandler(handler)
+
+bp.logger.info("Main Blueprint Logger Initialized")
+
+@bp.route("/profile", methods=["GET"])
+@jwt_required()
+def profile():
+    bp.logger.info("시발")
+    current_user_email = get_jwt_identity()
+    return jsonify({"msg": f"Welcome User {current_user_email}"}), 200
+
 
 @bp.route("/audio", methods=['POST'])
+@jwt_required()
 def upload_audio():
     try:
         audio_file = request.files['audio']
@@ -29,14 +47,16 @@ def upload_audio():
         return jsonify({'message': str(ve)}), 400
     except Exception as e:
         bp.logger.error(f'Unexpected error: {str(e)}')
-        return jsonify({'message': 'An unexpected error occurred.'}), 500
+        return jsonify({f'message': 'An unexpected error occurred.{str(e)}'}), 500
 
 
 @bp.route("/audio", methods=['GET'])
+@jwt_required()
 def send_audio():
     try:
         filename = request.args.get('filename')
-        file_path = request.args.get('file_path')
+        file_path = 'uploads/' + filename
+        bp.logger.info(f'request data: file_path: {file_path}')
         txt = rCall_RunSTT(filename, file_path)
         delete_audio(file_path)
         

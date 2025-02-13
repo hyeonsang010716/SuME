@@ -13,7 +13,9 @@ const Mainpage = () => {
   const [audioURL, setAudioURL] = useState(null);
   const [recordingStartTime, setRecordingStartTime] = useState(null);
   const [elapsedTime, setElapsedTime] = useState("00:00");
-  const [summation, setSummation] = useState();
+  const [summation, setSummation] = useState(() => {
+    return sessionStorage.getItem("summation") || "";
+  });
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -41,8 +43,10 @@ const Mainpage = () => {
         try {
           setIsLoading(true);
           await API.uploadAudio(formData);
-          const result = await API.getSummation();
-          console.log('main_page: '+ result)
+          let result = await API.getSummation();
+          if (!result){
+            result = "인식된 음성이 존재하지 않습니다."
+          }
           setSummation(result);
         } catch (err) {
           console.error(err);
@@ -56,6 +60,7 @@ const Mainpage = () => {
       setMediaRecorder(recorder);
       setRecordingStartTime(Date.now());
       setIsRecording(true);
+      console.log("녹음 시작");
     } catch (error) {
       console.error("Error accessing microphone:", error);
       setErrorMessage("마이크 접근 실패");
@@ -68,6 +73,7 @@ const Mainpage = () => {
       setMediaRecorder(null);
       setRecordingStartTime(null);
       setIsRecording(false);
+      console.log("녹음 종료");
     }
   };
 
@@ -88,7 +94,7 @@ const Mainpage = () => {
   }, [isRecording, recordingStartTime]);
 
   return (
-    <div id="div2" className="flex flex-col items-center h-[525px] bg-white shadow-none md:shadow-xl rounded-none md:rounded-[60px] pt-4 w-full md:w-[800px]">
+    <div id="div2" className="flex flex-col items-center h-[525px] bg-white shadow-none md:shadow-xl rounded-none md:rounded-b-[20px] xl:rounded-[30px] pt-4 w-full md:w-[800px]">
       <div id="title" className="w-full h-1/6 block text-2xl font-bold transition-all duration-200 text-center text-gray-500">
         Summary MEETING
       </div>
@@ -102,7 +108,7 @@ const Mainpage = () => {
       <div className="w-full h-1/4 flex items-center justify-center mt-8 md:mt-0">
         <div
           id="text창"
-          className="flex items-center justify-end p-8 bg-[#F4F4F5] space-x-4 mb-4 w-5/6 h-20 rounded-3xl shadow-xl border-2 border-white text-sm lg:text-base 2xl:text-base"
+          className="flex items-center justify-end p-8 bg-[#F4F4F5] space-x-4 mb-4 w-full md:w-5/6 h-20 rounded-3xl shadow-xl border-2 border-white text-sm lg:text-base 2xl:text-base"
         >
           <RecordedAudio audioURL={audioURL} />
           <div className="flex space-x-4 items-center justify-center">

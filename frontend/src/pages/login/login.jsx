@@ -1,14 +1,14 @@
 import React, { useState } from "react";
-import { getCsrfToken } from "../../csrf"; // CSRF 토큰 가져오는 함수
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
-
-const API_URL = "http://localhost:5000";
+import { useNavigate, Link } from "react-router-dom";
+import API from "../../API";
 
 const Login = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   // 비밀번호 보이기/숨기기 토글
   const togglePasswordVisibility = () => {
@@ -17,48 +17,38 @@ const Login = () => {
 
   // 로그인 처리
   const handleLogin = async () => {
-    if (!id || !password) {
-      alert("입력 후 클릭하세요.");
+    if (!id) {
+      alert("이메일을 입력하세요.");
+      return;
+    } else if (!password) {
+      alert("비밀번호를 입력하세요.");
       return;
     }
 
+    console.log("login 버튼 클릭");
+
     try {
-      const response = await fetch(`${API_URL}/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username: id, password }),
-        credentials: "include", // JWT를 쿠키에 저장하므로 필요
-      });
-
-      if (!response.ok) {
-        throw new Error("로그인 실패");
-      }
-
-      // 로그인 성공 후 CSRF 토큰 요청
-      await getCsrfToken();
-
-      alert("로그인 성공!");
-      window.location.href = "/"; // 홈 화면으로 이동 (또는 다른 페이지)
+      await API.login(id, password);
+      navigate("/");
     } catch (error) {
-      console.error("Login error:", error);
-      alert("로그인에 실패했습니다.");
+      alert("이메일 혹은 비밀번호가 일치하지 않습니다.");
     }
   };
 
   return (
-    <div className="flex flex-col items-center h-[525px] w-[800px] bg-white shadow-md p-8 pt-4 rounded-xl">
+    <div className="flex flex-col items-center h-[525px] w-[800px] bg-white shadow-md p-8 pt-4 rounded-none md:rounded-b-[20px] xl:rounded-[30px]">
       <div className="text-2xl font-bold text-center text-gray-600">Login</div>
 
       <div className="w-5/6 h-full bg-gray-100 rounded-2xl p-10 shadow-xl flex flex-col items-center justify-center mt-4 gap-6">
         {/* ID 입력 */}
         <div className="flex flex-col w-5/6">
           <label htmlFor="id-input" className="text-sm font-semibold text-gray-500 mb-2">
-            ID
+            Email
           </label>
           <input
             id="id-input"
             type="text"
-            placeholder="Enter your ID"
+            placeholder="Enter your Email"
             value={id}
             onChange={(e) => setId(e.target.value)}
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-400"
@@ -92,13 +82,16 @@ const Login = () => {
         <div className="w-full mt-10 flex items-center justify-center">
           <button
             onClick={handleLogin}
-            disabled={!id || !password}
-            className={`px-6 py-2 font-semibold rounded-lg shadow-lg transition-all duration-300 ${
-              id && password ? "bg-pink-300 text-white hover:bg-pink-400" : "bg-gray-300 text-gray-500 cursor-not-allowed"
-            }`}
+            className="w-28 py-2 font-semibold rounded-lg shadow-lg transition-all duration-300 mr-4 bg-pink-300 text-white hover:bg-pink-400"
           >
             Login
           </button>
+          <Link
+            to="/Auth"
+            className="flex items-center justify-center w-28 py-2 ml-4 font-semibold rounded-lg shadow-lg transition-all duration-300 bg-white border-2 hover:bg-green-300 text-gray-500 hover:text-white hover:border-green-300"
+          >
+            Join
+          </Link>
         </div>
       </div>
     </div>
