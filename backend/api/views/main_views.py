@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required
 import logging
 
 from api.models.audio import Audio
@@ -21,18 +21,12 @@ if not bp.logger.handlers:
 
 bp.logger.info("Main Blueprint Logger Initialized")
 
-@bp.route("/profile", methods=["GET"])
-@jwt_required()
-def profile():
-    bp.logger.info("시발")
-    current_user_email = get_jwt_identity()
-    return jsonify({"msg": f"Welcome User {current_user_email}"}), 200
-
 
 @bp.route("/audio", methods=['POST'])
 @jwt_required()
 def upload_audio():
     try:
+        bp.logger.info('Start upload audio')
         audio_file = request.files['audio']
         if not audio_file:
             raise ValueError("No audio file provided.")

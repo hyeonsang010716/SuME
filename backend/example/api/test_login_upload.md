@@ -30,7 +30,7 @@ curl -X POST http://localhost:5000/auth/login \
 3. 프로필 체크 (로그인 테스트)
 
 ```
-curl -X GET http://127.0.0.1:5000/profile      -H "Authorization: Bearer YOUR_JWT_token"
+curl -X GET http://localhost:5000/auth/profile      -H "Authorization: Bearer YOUR_JWT_token"
 ```
 
 4. audio 업로드 확인
