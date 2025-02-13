@@ -4,28 +4,23 @@ import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import './calenderSummary.css';
+import API from '../../API';
 
 function CalenderSummary(){
-  const [events, setEvents] = useState([
-      {
-        title: 'test',
-        start: format(new Date(), 'yyyy-MM-dd'),
-        end: '2025-02-13',
-        description: '1오늘의 일정입니다.',
-      },
-      {
-        title: 'exam',
-        start: '2025-02-01',
-        end: '2025-02-20',
-        description: '2오늘의 일정입니다.',
-      },
-      {
-        title: 'study',
-        start: format(new Date(), 'yyyy-MM-dd'),
-        end: '2025-02-27',
-        description: '3오늘의 일정입니다.',
-      },
-    ]);
+  const [events, setEvents] = useState([]);
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const eventData = await API.getEvents();
+        setEvents(eventData);
+      } catch (error) {
+        console.error("일정을 불러오는 데 실패했습니다:", error);
+      }
+    };
+
+    fetchEvents();
+  }, []);
 
   return(
     <div className="w-full h-full p-0">
