@@ -7,6 +7,7 @@ import logging
 import os
 
 from models.stt.google_cloude import rInit_GoogleCloudeSTT
+from models.summary.gemini_summary import rInit_Graph
 from api.config import config
 from api.models import db
 
@@ -64,4 +65,5 @@ if __name__ == "__main__":
     load_dotenv()
     app = create_app()
     rInit_GoogleCloudeSTT()
+    rInit_Graph()
     app.run(host="0.0.0.0", port=5000)

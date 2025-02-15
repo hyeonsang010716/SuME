@@ -5,8 +5,8 @@ import logging
 from api.models.audio import Audio
 from api.utils import save_audio, delete_audio
 from models.stt.google_cloude import rCall_RunSTT
-
-
+from api.models.event import Event
+from models.summary.gemini_summary import rCall_GetSummary
 bp = Blueprint('main', __name__)
 
 # 로거 설정
@@ -52,9 +52,17 @@ def send_audio():
         file_path = 'uploads/' + filename
         bp.logger.info(f'request data: file_path: {file_path}')
         txt = rCall_RunSTT(filename, file_path)
+        
+        
+        
+        summary, calendar = rCall_GetSummary(txt)
+        for data in calendar:
+            # user_id 필요함
+            # new_event = Event.create(data.title, data.description, data.start_date, data.end_date, user_id)
+            pass
         delete_audio(file_path)
         
-        return jsonify({"message": txt}), 200
+        return jsonify({"message": summary}), 200
     
     except Exception as e:
         return jsonify({'error': str(e)}), 400
