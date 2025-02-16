@@ -38,8 +38,22 @@ const API = {
   // Summation 요청
   getSummation: async () => {
     try {
-      console.log("Summation 요청");
       const token = localStorage.getItem("token");
+      // 현재 사용자 ID 가져오기
+      let response = await fetch(`${API_URL}/auth/profile`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        }
+      });
+
+      const userData = await response.json();
+      console.log("User ID:", userData.user_id);
+      if (!response.ok) {
+        throw new Error("사용자 ID 가져오기 실패");
+      }
+
+      console.log("Summation 요청");
       const filename = localStorage.getItem("audio_filename");
       const filePath = localStorage.getItem("audio_file_path");
 
@@ -47,8 +61,8 @@ const API = {
         throw new Error("No audio file uploaded yet.");
       }
 
-      const response = await fetch(
-        `${API_URL}/audio?filename=${filename}&file_path=${filePath}`,
+      response = await fetch(
+        `${API_URL}/audio?filename=${filename}&file_path=${filePath}&user_id=${userData.user_id}`,
         {
           method: "GET",
           headers: {
@@ -64,6 +78,14 @@ const API = {
 
       const data = await response.json();
       console.log("Summation 요청 완료", data);
+      const isConfirmed = window.confirm("일정을 저장하시겠습니까?");
+      if (isConfirmed) {
+        alert("일정을 저장했습니다.");
+      } else {
+        let event_id = data.event_id;
+        console.log("삭제할 이벤트 id: ",event_id);
+        API.deleteEvent(event_id);
+      }
       return data.message;
     } catch (error) {
       console.error("Error fetching Summation:", error);
