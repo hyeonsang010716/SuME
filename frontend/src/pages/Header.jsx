@@ -14,13 +14,13 @@ const Header = ({ isMainPage }) => {
 
   useEffect(() => {
     const tokenValid = API.checkTokenValidity();
-    setIsLoggedIn(tokenValid);
+     setIsLoggedIn(tokenValid);
   }, [isMainPage]);
 
   const handleLogout = () => {
     console.log("logout 클릭");
     API.logout();
-    setIsLoggedIn(false);
+     setIsLoggedIn(false);
     navigate("/");
   };
 
@@ -67,10 +67,10 @@ const Header = ({ isMainPage }) => {
       {isLoggedIn && (
         <div id="mid" className="flex items-center justify-center w-full h-2/3">
           <button
-            //onClick={() => {
-            //  setIsCalenderOpen(true);
-            //  document.body.classList.add("overflow-hidden"); // 모달 열릴 때 스크롤 방지
-            //}}
+            onClick={() => {
+              setIsCalenderOpen(true);
+              document.body.classList.add("overflow-hidden"); // 모달 열릴 때 스크롤 방지
+            }}
             className="w-2/3 h-5/6 rounded-xl font-bold shadow-xl opacity-50 bg-gray-100 border-2 border-white hover:bg-gray-300 transition duration-300"
           >
             <CalenderSummary />
@@ -85,7 +85,7 @@ const Header = ({ isMainPage }) => {
         >
           <div className="bg-white p-6 rounded-lg shadow-2xl w-4/5 md:w-1/2 relative">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold">캘린더</h2>
+              <h2 className="text-xl font-bold opacity-60">캘린더</h2>
               <button
                 className="text-red-500 font-bold text-lg"
                 onClick={() => {

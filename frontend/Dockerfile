@@ -1,11 +1,11 @@
-FROM node:20
+FROM node:22
 
 WORKDIR /app
 
 COPY package*.json ./
 
-# 의존성 설치 (React 버전 충돌 방지 옵션 추가)
-RUN npm install --legacy-peer-deps
+# 의존성 설치 (보다 안정적인 방법 사용)
+RUN npm install
 
 COPY . .
 

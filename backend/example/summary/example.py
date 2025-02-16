@@ -1,65 +1,177 @@
 from dotenv import load_dotenv
 from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain_core.output_parsers import StrOutputParser
-from langchain_core.prompts import PromptTemplate
-from typing import TypedDict
+from langchain_core.output_parsers import StrOutputParser, PydanticOutputParser
+from langchain.output_parsers.fix import OutputFixingParser
+from langchain_core.prompts import PromptTemplate, ChatPromptTemplate
+from typing import TypedDict, List
 from langgraph.graph import StateGraph, START, END
+from datetime import datetime, date
+from pydantic import BaseModel, Field
+import pytz
 
-summary_prompt = """당신은 회의 내용을 정리하는 AI입니다. 주어진 회의 내용을 이해하고, 핵심 정보를 체계적으로 정리해주세요.
+rgSummary_Prompt = """[회의내용]
+{content}
+
+당신은 회의 내용을 정리하는 AI입니다. 주어진 회의 내용을 이해하고, 가독성 좋은 형식으로 간결하게 정리하세요.
 
 📌 정리 기준:
-1. **핵심 내용 요약**: 회의에서 논의된 주요 사항을 간결하게 요약합니다.
-2. **결론 및 결정사항**: 회의에서 결정된 사항이나 합의된 내용을 정리합니다.
-3. **Action Items (TODOs)**: 실행해야 할 작업 항목을 정리하고, 담당자를 포함할 수 있다면 명시합니다.
-4. **기타 논의 사항**: 결정되지는 않았지만 추가 논의가 필요한 사항을 정리합니다.
+1. **회의 주제**: 회의 주제와 목적을 정리합니다
+2. **핵심 내용 요약**: 회의에서 논의된 주요 사항을 간결하고 명확하게 요약합니다.
+3. **결론 및 결정사항**: 회의에서 결정된 사항이나 합의된 내용을 정리합니다.
+4. **Action Items (TODOs)**: 실행해야 할 작업 항목을 정리하고, 담당자와 마감기한를 포함할 수 있다면 명시합니다.
+5. **기타 논의 사항**: 새로운 아이디어나 제안, 결정되지는 않았지만 추가 논의가 필요한 사항을 정리합니다.
 
-누구나 쉽게 이해할 수 있는 가독성 좋은 형식으로 정리하세요.
+[유의사항]
+1. 정리한 내용에서 회의 내용과 상관없는 비속어와 음란한 표현이 있으면 "부적절한 단어가 포함되어 있습니다"만 출력합니다.
+2. 회의 내용을 왜곡시켜서는 안됩니다."""
 
-[회의내용]
-{content}"""
+rgCalendar_Prompt = """당신은 회의 내용을 분석하여 효율적으로 일정을 정리하고 관리하는 고급 일정 관리 시스템 AI입니다.  
+회의 내용을 철저히 분석한 후, 필요한 일정을 식별하고, 적절한 날짜를 배정하여 일정 관리를 도와야 합니다.  
 
+### 일정 추출 가이드라인
+
+1. **일정의 주요 요소를 포함하세요.**  
+   - 일정 제목: 핵심 내용을 반영하여 간결하고 직관적인 제목 작성  
+   - 일정 설명: 해당 일정이 무엇인지 간략히 요약  
+   - 일정 시작 날짜 및 종료 날짜: date 형식 (YYYY-MM-DD) 사용  
+
+2. **일정 분배 기준**  
+   - 오늘 날짜 {today}을 기준으로 1주일(7일) 이내의 일정을 추출  
+   - 일정이 겹치지 않도록 적절한 간격을 두고 배치  
+   - 단, 회의 내용에서 특정 날짜가 언급되었을 경우 해당 날짜를 우선 적용  
+
+3. **우선순위 반영**  
+   - 긴급한 일정(즉시 조치 필요)은 가능한 한 앞쪽 날짜에 배치  
+   - 중요도가 낮은 일정은 여유로운 날짜에 배정  
+   - 중요도가 높은 일정이 겹칠 경우 시간 차이를 두고 배치  
+
+4. **일정 날짜 추론**  
+   - 회의 내용에서 특정 기한이나 마감일이 명확하지 않을 경우,  
+     논리적으로 가장 적절한 날짜를 예측하여 배치  
+   - 예) "다음 주 초까지 보고서 제출" → {today} 기준으로 1~7일 후 일정 배치  
+
+5. **각 일정은 반드시 다음 필드를 포함해야 합니다:**
+    - `title`: 일정 제목
+    - `description`: 일정 설명
+    - `start_date`: YYYY-MM-DD 형식의 시작 날짜
+    - `end_date`: YYYY-MM-DD 형식의 종료 날짜
+   
+[회의 내용]  
+{content}
+
+
+{format_instructions}
+"""
+
+class Calendar(BaseModel):
+    """개별 일정을 표현하는 Pydantic 모델."""
+
+    title: str = Field(..., description="일정의 제목을 입력하세요.")
+    description: str = Field(..., description="일정의 간략한 설명을 입력하세요.")
+    start_date: date = Field(..., description="일정 시작 날짜 (YYYY-MM-DD)")
+    end_date: date = Field(..., description="일정 종료 날짜 (YYYY-MM-DD)")
+    
+class CalendarList(BaseModel):
+    """여러 개의 일정을 포함하는 Pydantic 모델."""
+    schedules: List[Calendar] = Field(..., description="추출된 여러 개의 일정 리스트")
+  
 class State(TypedDict):
     summary_response : str # 생성된 회의 요약
     content : str  # 회의 내용
-
-def generate_summary(state: State):
+    calendar_response : list #생성된 캘린더 데이터
     
+mgLLm = None
+mgSummaryChain = None
+mgCalendarChain = None
+mgGraph = None
+mgKST = pytz.timezone('Asia/Seoul')
 
-    llm = ChatGoogleGenerativeAI(
+def rInit_SummaryChain() -> None:
+    """Gemini Summary Init func"""
+    global mgLLm, mgSummaryChain
+
+    mgLLm = ChatGoogleGenerativeAI(
         model="gemini-1.5-flash-latest",
     )
 
     prompt = PromptTemplate(
-        template=summary_prompt,
+        template=rgSummary_Prompt,
         input_variables=["content"],
     )
+    
+    mgSummaryChain = prompt | mgLLm | StrOutputParser()
+    
+    return None
 
-    chain = prompt | llm | StrOutputParser()
+def mCall_Generate_Summary(state: State) -> dict:
+    """요약 생성 함수"""
+    response = mgSummaryChain.invoke({"content" : state["content"]})
 
-    response = chain.invoke({"content" : state["content"]})
-
+    if response == "부적절한 단어가 포함되어 있습니다":
+        raise Exception("부적절한 단어가 포함되어 있습니다")
+    
     return {"summary_response" : response}
 
+def rInit_CalendarChain() -> None:
+    """Calendar Data Generate ChainInit func"""
+    global mgCalendarChain
 
-def graph(content):
+    output_parser = OutputFixingParser.from_llm(parser=PydanticOutputParser(pydantic_object=CalendarList), llm=mgLLm, max_retries=3)
+    prompt_template = ChatPromptTemplate.from_template(rgCalendar_Prompt).partial(format_instructions=output_parser.get_format_instructions())
+    mgCalendarChain = (prompt_template | mgLLm | output_parser)
+    
+    return None
+
+def mCall_CalendarChain(state: State) -> dict:
+    """캘린더 데이터 생성 함수"""
+    
+    today = datetime.now(mgKST).strftime("%Y-%m-%d (%A)")
+    
+    print(state["summary_response"])
+    
+    response = mgCalendarChain.invoke({"content" : state["summary_response"], "today" : today})
+    
+    for x in response.schedules:
+        print(x.title)
+        print(x.description)
+        print(x.start_date)
+        print(x.end_date)
+        print()
+        print()
+            
+    return {"calendar_response" : response.schedules}
+
+def rInit_Graph() -> None:
+    """그래프 초기화 함수"""
+    global mgGraph
+    
+    rInit_SummaryChain()
+    rInit_CalendarChain()
+    
     graph_builder = StateGraph(State)
 
-    graph_builder.add_node("generate_summary", generate_summary)
-
+    graph_builder.add_node("generate_summary", mCall_Generate_Summary)
+    graph_builder.add_node("generate_calendar", mCall_CalendarChain)
+    
     graph_builder.add_edge(START, "generate_summary")
-    graph_builder.add_edge("generate_summary", END)
+    graph_builder.add_edge("generate_summary", "generate_calendar")
+    graph_builder.add_edge("generate_calendar", END)
 
-    graph = graph_builder.compile()
+    mgGraph = graph_builder.compile()
+    
+    return None
 
-    response = graph.invoke({"content" : content})
+def rCall_GetSummary(content: str) -> tuple[str, list]:
+    """Summary 실행함수, 회의내용을 필요"""
 
-    return response["summary_response"]
+    response = mgGraph.invoke({"content" : content})
 
+    return response["summary_response"], response["calendar_response"]
 
 if __name__ == "__main__":
     load_dotenv()
-
-    tmp = """우리는 GeForce를 활용해 인공지능을 가능하게 했으며, 이제 인공지능이 다시 GeForce를 혁신하고 있습니다.
+    rInit_Graph()
+    txt = """우리는 GeForce를 활용해 인공지능을 가능하게 했으며, 이제 인공지능이 다시 GeForce를 혁신하고 있습니다. 
 
 오늘 우리는 차세대 RTX Black 12 시리즈를 발표합니다. 함께 살펴보시죠.
 
@@ -91,6 +203,8 @@ RTX 5090은 RTX 4090의 성능을 2배로 제공합니다. 물론, 우리는 대
 
 RTX Blackwell 패밀리는 GeForce의 혁신을 통해 AI의 대중화를 실현했고, 이제 AI가 다시 GeForce를 혁신하는 데 기여하고 있습니다.
 
+GeForce 회의는 내일부터 이틀 동안 진행합니다. 일정에 등록해놓으세요.
+
 이제 AI에 대해 이야기해 보겠습니다. NVIDIA의 본사로 이동해 실제 AI 혁신을 살펴보겠습니다. 현재 AI 업계는 인공지능의 규모를 확장하기 위해 치열한 경쟁을 벌이고 있습니다. **스케일링 법칙(Scaling Law)**은 여러 세대에 걸쳐 연구자들과 업계가 관찰하고 입증한 강력한 모델입니다.
 
 이 스케일링 법칙은, 더 많은 데이터와 더 큰 모델, 그리고 더 많은 컴퓨팅 파워를 활용할수록 모델의 성능과 능력이 더 좋아진다는 것을 보여줍니다. 이 법칙은 지속적으로 적용되고 있으며, 인터넷에서 생성되는 데이터는 매년 2배씩 증가하고 있습니다. 앞으로 몇 년 안에, 인류는 그동안 생성한 모든 데이터를 초과하는 양을 생산하게 될 것입니다.
@@ -108,9 +222,5 @@ RTX Blackwell 패밀리는 GeForce의 혁신을 통해 AI의 대중화를 실현
 AI는 매우 복잡하고 해결하기 어려운 문제에 직면할 수 있습니다. 이 문제는 기능적으로 검증 가능하고 명확한 답이 있는 경우가 많습니다. 예를 들어, 정리를 증명하거나 기하학 문제를 해결하는 것처럼요. 이러한 문제들을 해결하는 과정에서 AI는 강화 학습을 통해 스스로를 개선하고 학습하게 됩니다. 이를 '사후 학습'(Post-training)이라고 부르며, 이를 위해 막대한 양의 연산 능력이 필요합니다. 그러나 그 결과는 놀라운 AI 모델을 탄생시킵니다.
 
 세 번째 확장 법칙은 '테스트 시 확장 법칙'(Test-time Scaling Law)입니다. 이는 AI가 실제로 사용되는 시점에서 발생하는 법칙입니다. 이 단계에서 AI는 자원을 다르게 배분하는 능력을 발휘합니다. AI가 자신의 매개변수를 개선하는 대신, 얼마나 많은 계산 자원을 사용할지 결정하여 원하는 답을 생성하는 데 집중합니다. 이는 마치 사람이 문제를 해결하기 위해 "생각"하거나 "추론"하는 과정과 유사합니다.
-
 """
-
-    output = graph(tmp)
-
-    print(output)
+    rCall_GetSummary(txt)
