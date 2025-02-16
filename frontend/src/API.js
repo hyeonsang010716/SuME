@@ -234,15 +234,10 @@ const API = {
       if (!userData.user_id) throw new Error("유효한 사용자 ID가 없습니다.");
 
       // 캘린더 API 요청
-      const url = new URL(`${API_URL}/calendar/events`);
-      url.searchParams.append("user_id", userData.user_id);
-      url.searchParams.append("start", "2024-02-01");
-      url.searchParams.append("end", "2026-02-20");
-
-      response = await fetch(url, {
+      response = await fetch(`${API_URL}/calendar/events?user_id=${userData.user_id}&start=2024-02-01&end=2026-02-20`, {
         method: "GET",
         headers: {
-          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
       });
 
