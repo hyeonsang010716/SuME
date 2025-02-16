@@ -191,6 +191,7 @@ const API = {
     const tokenExp = localStorage.getItem("token_exp");
     if (!token || !tokenExp) {
       console.log("토큰 없음. 로그아웃 상태 유지");
+      sessionStorage.setItem("summation","");
       return false;
     }
 
@@ -207,6 +208,7 @@ const API = {
   logout: () => {
     localStorage.removeItem("token");
     localStorage.removeItem("token_exp");
+    sessionStorage.setItem("summation", "");
     console.log("로그아웃 완료");
   },
 
