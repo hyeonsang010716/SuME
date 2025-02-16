@@ -1,5 +1,5 @@
 const API_URL = "http://localhost:5000"; // 로컬
-// const API_URL = "http://sume-backend:5000"; // 서버
+// const API_URL = "/api"; // 서버
 
 const API = {
   // 날짜 포맷 변환 함수 (YYYY-MM-DD 형식으로 변환)
