@@ -1,11 +1,13 @@
-// 로컬
-const API_URL = "http://localhost:5000";
-
-// 서버
-// const API_URL = "http://sume-backend:5000";
+const API_URL = "http://localhost:5000"; // 로컬
+// const API_URL = "/api"; // 서버
 
 const API = {
-  // Upload Audio
+  // 날짜 포맷 변환 함수 (YYYY-MM-DD 형식으로 변환)
+  formatDate: (dateString) => {
+    return new Date(dateString).toISOString().split("T")[0];
+  },
+
+  // 오디오 업로드
   uploadAudio: async (formData) => {
     try {
       console.log("Audio 업로드 중");
@@ -19,13 +21,10 @@ const API = {
       });
 
       if (!response.ok) {
-        console.log("연결 실패");
-        throw new Error("File upload failed. response failed.");
+        throw new Error("File upload failed.");
       }
 
       const data = await response.json();
-
-      // filename과 file_path 저장
       localStorage.setItem("audio_filename", data.filename);
       localStorage.setItem("audio_file_path", data.file_path);
       console.log("Audio 업로드 완료");
@@ -36,11 +35,25 @@ const API = {
     }
   },
 
-  // Get Summation
+  // Summation 요청
   getSummation: async () => {
     try {
-      console.log("Summation 요청");
       const token = localStorage.getItem("token");
+      // 현재 사용자 ID 가져오기
+      let response = await fetch(`${API_URL}/auth/profile`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        }
+      });
+
+      const userData = await response.json();
+      console.log("User ID:", userData.user_id);
+      if (!response.ok) {
+        throw new Error("사용자 ID 가져오기 실패");
+      }
+
+      console.log("Summation 요청");
       const filename = localStorage.getItem("audio_filename");
       const filePath = localStorage.getItem("audio_file_path");
 
@@ -48,8 +61,8 @@ const API = {
         throw new Error("No audio file uploaded yet.");
       }
 
-      const response = await fetch(
-        `${API_URL}/audio?filename=${filename}&file_path=${filePath}`,  // path 수정
+      response = await fetch(
+        `${API_URL}/audio?filename=${filename}&file_path=${filePath}&user_id=${userData.user_id}`,
         {
           method: "GET",
           headers: {
@@ -60,21 +73,29 @@ const API = {
       );
 
       if (!response.ok) {
-        console.log("연결 실패");
         throw new Error("Failed to fetch Summation.");
       }
 
       const data = await response.json();
       console.log("Summation 요청 완료", data);
+      const isConfirmed = window.confirm("일정을 저장하시겠습니까?");
+      if (isConfirmed) {
+        alert("일정을 저장했습니다.");
+      } else {
+        let event_ids = data.event_ids;
+        console.log("삭제할 이벤트 id: ",event_ids);
+        event_ids.map(id => {
+          API.deleteEvent(id);
+        })
+      }
       return data.message;
-      
     } catch (error) {
       console.error("Error fetching Summation:", error);
       throw error;
     }
   },
 
-  //회원가입
+  // 회원가입
   register: async (name, email, password) => {
     try {
       const response = await fetch(`${API_URL}/auth/register`, {
@@ -86,12 +107,11 @@ const API = {
       });
 
       const data = await response.json();
-      
       if (!response.ok) {
         throw new Error(data.message || "회원가입 실패");
       }
-      
-      console.log("회원가입 성공:",data);
+
+      console.log("회원가입 성공:", data);
       return data;
     } catch (error) {
       console.error("회원가입 에러:", error.message);
@@ -99,7 +119,7 @@ const API = {
     }
   },
 
-  //Login
+  // 로그인
   login: async (email, password) => {
     try {
       const response = await fetch(`${API_URL}/auth/login`, {
@@ -111,22 +131,19 @@ const API = {
       });
 
       const data = await response.json();
-
       if (!response.ok) {
         throw new Error(data.message || "로그인 실패");
       }
 
       // JWT 디코딩 (Base64 URL 디코딩)
       const tokenParts = data.access_token.split(".");
-      const payload = JSON.parse(atob(tokenParts[1])); // Base64 디코딩
-      const expirationTime = payload.exp * 1000; // 초 → 밀리초 변환
+      const payload = JSON.parse(atob(tokenParts[1].replace(/-/g, "+").replace(/_/g, "/")));
+      const expirationTime = payload.exp * 1000;
 
-      // 현재 시간보다 1분 후에 토큰이 만료된다면, 문제 발생 가능
       if (Date.now() > expirationTime - 60000) {
         console.warn("발급된 JWT 토큰이 너무 빨리 만료됩니다.");
       }
 
-      // JWT와 만료 시간 저장
       localStorage.setItem("token", data.access_token);
       localStorage.setItem("token_exp", expirationTime.toString());
 
@@ -138,13 +155,12 @@ const API = {
     }
   },
 
-  // JWT 검증
+  // 프로필 정보 가져오기
   getProfile: async () => {
     const token = localStorage.getItem("token");
-
     if (!token) {
       console.error("토큰이 없음");
-      return null; // null 반환
+      return null;
     }
 
     try {
@@ -156,44 +172,177 @@ const API = {
         },
       });
 
-      const data = await response.json();
-
       if (!response.ok) {
         throw new Error("인증 실패");
       }
 
+      const data = await response.json();
       console.log("프로필 정보:", data);
-      return data; // 정상 반환
+      return data;
     } catch (error) {
       console.error("프로필 요청 에러:", error.message);
-      return null; // 에러 발생 시 null 반환
+      return null;
     }
   },
 
-  //JWT 유효성 확인
+  // 토큰 검증
   checkTokenValidity: () => {
     const token = localStorage.getItem("token");
     const tokenExp = localStorage.getItem("token_exp");
     if (!token || !tokenExp) {
       console.log("토큰 없음. 로그아웃 상태 유지");
+      sessionStorage.setItem("summation","");
       return false;
     }
 
-    const currentTime = Date.now();
-    if (currentTime > parseInt(tokenExp, 10)) {
+    if (Date.now() > Number(tokenExp)) {
       console.log("토큰 만료됨. 자동 로그아웃 진행");
       API.logout();
       return false;
     }
 
-    return true; // 유효한 토큰
+    return true;
   },
 
-  // logout
+  // 로그아웃
   logout: () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("token_exp");
+    sessionStorage.setItem("summation", "");
     console.log("로그아웃 완료");
   },
+
+  // 이벤트(일정) 가져오기
+  getEvents: async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.error("토큰이 없음");
+      return [];
+    }
+
+    try {
+      // 현재 사용자 ID 가져오기
+      let response = await fetch(`${API_URL}/auth/profile`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const userData = await response.json();
+      console.log("User ID:", userData.user_id);
+      if (!userData.user_id) throw new Error("유효한 사용자 ID가 없습니다.");
+
+      // 캘린더 API 요청
+      response = await fetch(`${API_URL}/calendar/events?user_id=${userData.user_id}&start=2024-02-01&end=2026-02-20`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("이벤트 받아오기 실패");
+      }
+
+      const data = await response.json();
+      console.log("이벤트 data:", data); // 변환 전 데이터 확인
+
+      // FullCalendar에서 인식 가능한 날짜 형식으로 변환
+      return data.map(event => ({
+        id: event.id,
+        title: event.title,
+        start: API.formatDate(event.start_time),  // 날짜 변환 적용
+        end: API.formatDate(event.end_time),
+        description: event.description
+      }));
+    } catch (error) {
+      console.error("이벤트 받아오기 에러:", error.message);
+      return [];
+    }
+  },
+  
+  // 새로운 이벤트 추가
+  createEvent: async (event) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.error("토큰이 없음");
+      return null;
+    }
+
+    try {
+      // 현재 사용자 ID 가져오기
+      let response = await fetch(`${API_URL}/auth/profile`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        }
+      });
+
+      const userData = await response.json();
+      console.log("User ID:", userData.user_id);
+      if (!response.ok) {
+        throw new Error("사용자 ID 가져오기 실패");
+      }
+
+      // 새 이벤트 추가 요청
+      response = await fetch(`${API_URL}/calendar/events`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          user_id: userData.user_id,  // 유저 ID 포함
+          title: event.title,
+          start: event.start,
+          end: event.end,
+          description: event.description,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("이벤트 추가 실패");
+      }
+      const data = await response.json();
+      console.log("새 이벤트 추가 성공:", data);
+
+      const updatedEvents = await API.getEvents();
+    return updatedEvents.find(e => e.id === data.id) || null; // 방금 생성한 이벤트 반환
+    } catch (error) {
+      console.error("이벤트 추가 에러:", error.message);
+      throw error;
+    }
+  },
+
+  // 이벤트 삭제
+  deleteEvent: async (eventId) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.error("토큰이 없음");
+      return null;
+    }
+
+    try {
+      const response = await fetch(`${API_URL}/calendar/events/${eventId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error("이벤트 삭제 실패");
+      }
+
+      console.log(`이벤트 (ID: ${eventId}) 삭제 성공`);
+      return true;
+    } catch (error) {
+      console.error("이벤트 삭제 에러:", error.message);
+      throw error;
+    }
+  }
 };
 
 export default API;

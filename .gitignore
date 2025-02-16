@@ -1,6 +1,7 @@
 __pycache__/
 *.db
 *.env
+*.log
 stt-key.json
-
+nginx/
 venv-ai/

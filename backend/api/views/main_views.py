@@ -1,12 +1,12 @@
 from flask import Blueprint, request, jsonify
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required
 import logging
 
 from api.models.audio import Audio
 from api.utils import save_audio, delete_audio
 from models.stt.google_cloude import rCall_RunSTT
-
-
+from api.models.event import Event
+from models.summary.gemini_summary import rCall_GetSummary
 bp = Blueprint('main', __name__)
 
 # 로거 설정
@@ -21,18 +21,12 @@ if not bp.logger.handlers:
 
 bp.logger.info("Main Blueprint Logger Initialized")
 
-@bp.route("/profile", methods=["GET"])
-@jwt_required()
-def profile():
-    bp.logger.info("시발")
-    current_user_email = get_jwt_identity()
-    return jsonify({"msg": f"Welcome User {current_user_email}"}), 200
-
 
 @bp.route("/audio", methods=['POST'])
 @jwt_required()
 def upload_audio():
     try:
+        bp.logger.info('Start upload audio')
         audio_file = request.files['audio']
         if not audio_file:
             raise ValueError("No audio file provided.")
@@ -58,9 +52,19 @@ def send_audio():
         file_path = 'uploads/' + filename
         bp.logger.info(f'request data: file_path: {file_path}')
         txt = rCall_RunSTT(filename, file_path)
+        
+        summary, calendar = rCall_GetSummary(txt)
+        
+        user_id = request.args.get('user_id')
+        
+        event_ids = []
+        
+        for data in calendar:
+            new_event = Event.create(data.title, data.description, data.start_date, data.end_date, user_id)
+            event_ids.append(new_event.id)
         delete_audio(file_path)
         
-        return jsonify({"message": txt}), 200
+        return jsonify({"message": summary, "event_ids": event_ids}), 200
     
     except Exception as e:
         return jsonify({'error': str(e)}), 400
