@@ -55,7 +55,7 @@
 ## 🛠️ 기술 스택
 | 구분          | 기술 스택 |
 |--------------|------------------------------------------|
-| **프론트엔드** | [React](https://reactjs.org/) |
+| **프론트엔드** | [React](https://reactjs.org/), [Tailwind CSS](https://tailwindcss.com/), [React Router](https://reactrouter.com/) |
 | **백엔드** | [Flask](https://flask.palletsprojects.com/), [SQLite](https://www.sqlite.org/index.html) |
 | **서버** | [Docker](https://www.docker.com/), [Docker Compose](https://docs.docker.com/compose/), [NGINX](https://nginx.org/en/), [Azure](https://azure.microsoft.com/) |
 | **AI** | [Gemini](https://ai.google.dev/gemini-api/docs/gemini-1.5-pro), [Google Cloud Speech-to-Text](https://cloud.google.com/speech-to-text), [langchain](https://www.langchain.com/), [langgraph](https://www.langchain.com/langgraph) |
