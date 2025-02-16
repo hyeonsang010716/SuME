@@ -82,9 +82,11 @@ const API = {
       if (isConfirmed) {
         alert("일정을 저장했습니다.");
       } else {
-        let event_id = data.event_id;
-        console.log("삭제할 이벤트 id: ",event_id);
-        API.deleteEvent(event_id);
+        let event_ids = data.event_ids;
+        console.log("삭제할 이벤트 id: ",event_ids);
+        event_ids.map(id => {
+          API.deleteEvent(id);
+        })
       }
       return data.message;
     } catch (error) {
